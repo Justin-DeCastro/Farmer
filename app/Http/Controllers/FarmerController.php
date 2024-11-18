@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Farmer;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class FarmerController extends Controller
@@ -71,7 +72,40 @@ class FarmerController extends Controller
 
 
     public function farmerdata(){
+        $apiKey = env('WEATHER_API_KEY');
+        $city = 'Oriental Mindoro'; // Replace with your city
+        $response = Http::get(env('WEATHER_API_URL') . "/weather", [
+            'q' => $city,
+            'appid' => $apiKey,
+            'units' => 'metric',
+        ]);
+
+        $weatherData = $response->json();
+        $tomorrowWeather = [
+            'temperature' => $weatherData['main']['temp'] ?? null,
+            'description' => $weatherData['weather'][0]['description'] ?? null,
+            'icon' => $weatherData['weather'][0]['icon'] ?? null, // Extract the icon code
+        ];
         $uniqueCropTypesCount = Farmer::distinct('crop_types')->count('crop_types');
-        return view ('User.farmerdata',compact('uniqueCropTypesCount'));
+        return view ('User.farmerdata',compact('uniqueCropTypesCount','tomorrowWeather'));
+    }
+    public function viewfarmercrops(){
+        $apiKey = env('WEATHER_API_KEY');
+        $city = 'Oriental Mindoro'; // Replace with your city
+        $response = Http::get(env('WEATHER_API_URL') . "/weather", [
+            'q' => $city,
+            'appid' => $apiKey,
+            'units' => 'metric',
+        ]);
+
+        $weatherData = $response->json();
+        $tomorrowWeather = [
+            'temperature' => $weatherData['main']['temp'] ?? null,
+            'description' => $weatherData['weather'][0]['description'] ?? null,
+            'icon' => $weatherData['weather'][0]['icon'] ?? null, // Extract the icon code
+        ];
+        $farmers = Farmer::all(); // Get all farmers from the table
+        $uniqueCropTypesCount = Farmer::distinct('crop_types')->count('crop_types');
+        return view ('User.cropsdata',compact('uniqueCropTypesCount','farmers','tomorrowWeather'));
     }
 }

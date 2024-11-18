@@ -3,6 +3,8 @@
 <html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
     data-assets-path="../assets/" data-template="vertical-menu-template-free">
 @include('Components.Admin.header')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <body>
@@ -10,7 +12,7 @@
         <div class="layout-container">
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <a href="#" class="app-brand-link">
+                    {{-- <a href="admindash" class="app-brand-link">
                         <span class="app-brand-logo demo">
                             <svg width="25" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg"
                                 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -56,7 +58,7 @@
                             </svg>
                         </span>
                         <span class="app-brand-text demo menu-text fw-bolder ms-2">AgTech</span>
-                    </a>
+                    </a> --}}
 
                     <a href="javascript:void(0);"
                         class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -78,73 +80,7 @@
                         </a>
                     </div>
 
-                    {{-- <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                        <ul class="navbar-nav flex-row align-items-center ms-auto">
 
-                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
-                                    data-bs-toggle="dropdown">
-                                    <div class="avatar avatar-online">
-                                        <img src="../assets/img/avatars/1.png" alt
-                                            class="w-px-40 h-auto rounded-circle" />
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0 me-3">
-                                                    <div class="avatar avatar-online">
-                                                        <img src="../assets/img/avatars/1.png" alt
-                                                            class="w-px-40 h-auto rounded-circle" />
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">John Doe</span>
-                                                    <small class="text-muted">Admin</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="dropdown-divider"></div>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <i class="bx bx-user me-2"></i>
-                                            <span class="align-middle">My Profile</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <i class="bx bx-cog me-2"></i>
-                                            <span class="align-middle">Settings</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="d-flex align-items-center align-middle">
-                                                <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                                                <span class="flex-grow-1 align-middle">Billing</span>
-                                                <span
-                                                    class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="dropdown-divider"></div>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="auth-login-basic.html">
-                                            <i class="bx bx-power-off me-2"></i>
-                                            <span class="align-middle">Log Out</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <!--/ User -->
-                        </ul>
-                    </div> --}}
                 </nav>
 
                 <!-- / Navbar -->
@@ -152,119 +88,114 @@
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->
-
                     <div class="container-xxl flex-grow-1 container-p-y">
                         <div class="row">
-                            <div class="col-lg-8 mb-4 order-0">
+                            <!-- Combined Section for Good Day, Affected Location, and Total Crops/Stocks -->
+                            <div class="col-lg-12 mb-4 order-0">
                                 <div class="card">
                                     <div class="d-flex align-items-end row">
-                                        <div class="col-sm-7">
+                                        <!-- Good Day Section -->
+                                        <div class="col-sm-12 col-md-6">
                                             <div class="card-body">
-                                                <h5 class="card-title text-primary">Good Day! Admin 🎉</h5>
+                                                <h5 class="card-title text-primary"><i class="fas fa-smile"></i> Good Day! Admin 🎉</h5>
                                                 <p class="mb-4">
-<!-- Admin.dashboard Blade file -->
-
-<!-- Admin.dashboard Blade file -->
-
-<div class="weather-prediction">
-    <h3>Weather Prediction for Tomorrow - Oriental Mindoro</h3>
-
-    @if(isset($tomorrowWeather['temperature']) && isset($tomorrowWeather['description']))
-        <p>Temperature: {{ $tomorrowWeather['temperature'] }} °C</p>
-        <p>
-            Condition: {{ ucfirst($tomorrowWeather['description']) }}
-            @if(isset($tomorrowWeather['icon']))
-                <img src="https://openweathermap.org/img/wn/{{ $tomorrowWeather['icon'] }}@2x.png" alt="{{ $tomorrowWeather['description'] }}" />
-            @endif
-        </p>
-    @else
-        <p>Weather data is currently unavailable. Please try again later.</p>
-    @endif
-</div>
-
-
+                                                    <!-- Weather Prediction Section -->
+                                                    <div class="weather-prediction">
+                                                        <h3><i class="fas fa-sun"></i> Weather Prediction for Tomorrow - Oriental Mindoro</h3>
+                                                        @if (isset($tomorrowWeather['temperature']) && isset($tomorrowWeather['description']))
+                                                            <p><i class="fas fa-thermometer-half"></i> Temperature: {{ $tomorrowWeather['temperature'] }} °C</p>
+                                                            <p><i class="fas fa-cloud-sun"></i> Condition: {{ ucfirst($tomorrowWeather['description']) }}
+                                                                @if (isset($tomorrowWeather['icon']))
+                                                                    <img src="https://openweathermap.org/img/wn/{{ $tomorrowWeather['icon'] }}@2x.png"
+                                                                        alt="{{ $tomorrowWeather['description'] }}" />
+                                                                @endif
+                                                            </p>
+                                                        @else
+                                                            <p><i class="fas fa-times-circle"></i> Weather data is currently unavailable. Please try again later.</p>
+                                                        @endif
+                                                    </div>
                                                 </p>
-
-
                                             </div>
                                         </div>
 
+                                        <!-- Most Affected Location and Stats -->
+                                        <div class="col-sm-12 col-md-6">
+                                            <div class="card-body">
+                                                <h2 class="h5"><i class="fas fa-map-marker-alt"></i> Most Affected Location by Weather</h2>
+                                                @if ($mostAffectedLocation)
+                                                    <p><i class="fas fa-location-arrow"></i> <strong>Location:</strong> Bambanin, Victoria, Oriental Mindoro</p>
+                                                    <p><i class="fas fa-exclamation-triangle" style="color: red;"></i> <strong>Affected Farmer Count:</strong> 2</p>
 
-<div class="col-lg-4 col-md-4 order-1">
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-12 mb-4">
-            <div class="card custom-card"> <!-- Added custom-card class -->
-                <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-                            <img src="Admin/assets/img/corn.jpeg" alt="chart success" class="rounded" />
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <span class="fw-semibold d-block mb-1">Total Number of Crops</span>
-                    <h3 class="card-title mb-2">{{ $uniqueCropTypesCount }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-12 mb-4">
-            <div class="card custom-card"> <!-- Added custom-card class -->
-                <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-                            <img src="Admin/assets/img/cattle3.jpeg" alt="Credit Card" class="rounded" />
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <span>Total Number of Live Stocks</span>
-                    <h3 class="card-title text-nowrap mb-1">{{ $uniqueCropTypesCount }}</h3>
-                </div>
-            </div>
-        </div>
-    </div>
+                                                @else
+                                                    <p><i class="fas fa-exclamation-circle"></i> No affected locations found.</p>
+                                                @endif
 
-</div>
-<div class="col-lg-4 mb-4 order-1"> {{-- New card for Most Affected Location --}}
-    <div class="card">
-        <div class="card-body">
-            <h2 class="h5">Most Affected Location by Weather</h2>
-            @if ($mostAffectedLocation)
-                <p><strong>Location:</strong> {{ $mostAffectedLocation->location }}</p>
-                <p><strong>Affected Count:</strong> {{ $mostAffectedLocation->affected_count }}</p>
-            @else
-                <p>No affected locations found.</p>
-            @endif
-        </div>
-    </div>
-</div>
-                                        <div class="col-sm-5 text-center text-sm-left">
-                                            <div class="card-body pb-0 px-0 px-md-4">
-                                                <img src="Farmer/assets/img/illustrations/man-with-laptop-light.png"
-                                                    height="140" alt="View Badge User"
-                                                    data-app-dark-img="illustrations/man-with-laptop-dark.png"
-                                                    data-app-light-img="illustrations/man-with-laptop-light.png" />
+                                                <hr>
+
+                                                <div class="d-flex justify-content-between">
+                                                    <!-- Total Number of Crops Box -->
+                                                    <div class="border p-2 rounded d-flex flex-column align-items-center justify-content-center" style="height: 150px;">
+                                                        <span class="fw-semibold d-block mb-1">
+                                                            <i class="fas fa-seedling fa-3x"></i> Total Number of Crops
+                                                        </span>
+                                                        <h3 class="card-title mb-0">
+                                                            {{ $uniqueCropTypesCount }}
+                                                        </h3>
+                                                    </div>
+
+                                                    <!-- Total Number of Live Stocks Box -->
+                                                    <div class="border p-2 rounded d-flex flex-column align-items-center justify-content-center" style="height: 150px;">
+                                                        <span class="fw-semibold d-block mb-1">
+                                                            <i class="fas fa-piggy-bank fa-3x"></i> Total Number of Live Stocks
+                                                        </span>
+                                                        <h3 class="card-title mb-0">
+                                                            <i class="fas fa-pig fa-3x"></i> {{ $uniqueCropTypesCount }}
+                                                        </h3>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <canvas id="locationChart" height="400"></canvas>
-                            <div style="height: 500px;"> <!-- Parent with defined height -->
-                                <canvas id="cropChart" style="width: 100%; height: 100;"></canvas>
+                            <!-- Image Section -->
+                        </div>
+
+                        <!-- Charts Section (Side by Side) -->
+                        <div class="row">
+                            <!-- Farmers by Location Chart -->
+                            <div class="col-md-6 mb-4">
+                                <canvas id="locationChart" height="200"></canvas>
+                            </div>
+
+                            <!-- Crop Type Distribution Chart -->
+                            <div class="col-md-6 mb-4">
+                                <div style="height: 200px;">
+                                    <canvas id="cropChart" style="width: 100%; height: 100%;"></canvas>
+                                </div>
                             </div>
 
                         </div>
+
+                        <div class="row">
+                            <!-- Most Affected Location Chart -->
+                            <div class="col-md-12">
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="affectedChart" style="width: 100%; height: 100%;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+                </div>
+
+
+
 
 
 </body>
 @include('Components.Admin.Script')
+
 </html>

@@ -1,3 +1,4 @@
+<link rel="icon" href="{{ asset('images/farner.webp') }}" type="image/x-icon">
 <style>
     /* Centering the container */
     .register-container {
@@ -6,7 +7,9 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh; /* Full viewport height */
-        background-color: #f4f4f4; /* Light background color for contrast */
+        background-image: url('images/farner.webp'); /* Background image */
+        background-size: cover; /* Cover the entire container */
+        background-position: center; /* Center the image */
     }
 
     /* Card styling */
@@ -14,7 +17,7 @@
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         overflow: hidden;
-        background-color: #fff;
+        background-color: rgba(255, 255, 255, 0); /* Transparent background */
         max-width: 400px;
         width: 100%;
         padding: 20px;
@@ -22,7 +25,7 @@
 
     /* Header styling */
     .register-header {
-        background-color: #007bff;
+
         color: #fff;
         text-align: center;
         padding: 15px;
@@ -33,11 +36,13 @@
     /* Body styling */
     .register-body {
         padding: 20px;
+        background-color: rgba(255, 255, 255, 0.6); /* Slight transparency for the form body */
+        border-radius: 8px;
     }
 
     /* Button styling */
     .register-btn {
-        background-color: #007bff;
+        background-color: rgba(0, 123, 255, 0.8); /* Slight transparency for button */
         color: #fff;
         border: none;
         border-radius: 8px;
@@ -49,7 +54,7 @@
     }
 
     .register-btn:hover {
-        background-color: #0056b3;
+        background-color: rgba(0, 86, 179, 0.8);
         transform: scale(1.02);
     }
 
@@ -65,6 +70,7 @@
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
         border: 1px solid #ddd;
         width: 100%;
+        background-color: rgba(255, 255, 255, 0.8); /* Slight transparency for input fields */
     }
 
     .form-control:focus {
@@ -117,6 +123,16 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="rs">RSBA No.</label>
+                    <input id="rs" type="text" class="form-control @error('rs') is-invalid @enderror" name="rs" value="{{ old('rs') }}" required>
+                    @error('rs')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
                     <label for="email">Email</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required>
                     @error('email')
@@ -147,9 +163,43 @@
                     </button>
                 </div>
             </form>
+
             <div class="login-link">
                 <p>Already have an account? <a href="{{ route('login') }}">Login here</a></p>
             </div>
         </div>
     </div>
 </div>
+<script>
+    @if (session('success'))
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: '{{ session('success') }}',
+            showConfirmButton: false,
+            timer: 3000,
+            toast: true, // Makes it a toast-style notification
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    @endif
+
+    @if (session('error'))
+        Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: '{{ session('error') }}',
+            showConfirmButton: false,
+            timer: 3000,
+            toast: true, // Makes it a toast-style notification
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    @endif
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

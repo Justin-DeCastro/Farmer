@@ -3,17 +3,32 @@
 namespace App\Http\Controllers;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class FeedbackController extends Controller
 {
     public function index(){
         $feedbacks = Feedback::all();
 
+        $apiKey = env('WEATHER_API_KEY');
+        $city = 'Oriental Mindoro'; // Replace with your city
+        $response = Http::get(env('WEATHER_API_URL') . "/weather", [
+            'q' => $city,
+            'appid' => $apiKey,
+            'units' => 'metric',
+        ]);
 
+        $weatherData = $response->json();
+        $tomorrowWeather = [
+            'temperature' => $weatherData['main']['temp'] ?? null,
+            'description' => $weatherData['weather'][0]['description'] ?? null,
+            'icon' => $weatherData['weather'][0]['icon'] ?? null, // Extract the icon code
+        ];
         $feedbackCount = $feedbacks->count();
          return view('User.feedback', [
             'feedbacks' => $feedbacks,
-            'feedbackCount' => $feedbackCount
+            'feedbackCount' => $feedbackCount,
+            'tomorrowWeather' => $tomorrowWeather,
         ]);
     }
     public function store(Request $request)

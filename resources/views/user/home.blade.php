@@ -1,5 +1,61 @@
 @include('Components.User.header')
 @include('Components.User.sidebar')
+<style>
+    .notification-card {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .notification-card .card {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .notification-card .btn-close {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      float: right;
+    }
+
+    .notification-card.d-none {
+      display: none;
+    }
+  </style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const announcementModal = document.getElementById('announcementModal');
+      const modalTitle = document.getElementById('announcementModalLabel');
+      const modalContent = document.getElementById('modalContent');
+
+      announcementModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        const title = button.getAttribute('data-title'); // Extract title from data-* attributes
+        const content = button.getAttribute('data-content'); // Extract content from data-* attributes
+
+        // Update the modal's content
+        modalTitle.textContent = title;
+        modalContent.textContent = content;
+      });
+    });
+
+    function closeNotification() {
+      document.getElementById('notification-card').classList.add('d-none');
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(() => {
+        document.getElementById("notification-card").classList.remove("d-none");
+      }, 2000);
+    });
+  </script>
+
+
       <div class="main-panel">
         <div class="main-header">
           <div class="main-header-logo">
@@ -45,6 +101,47 @@
           </nav>
           <!-- End Navbar -->
         </div>
+        <div id="notification-card" class="notification-card d-none">
+            <div class="card">
+              <div class="card-header">
+                <h5>Latest Announcements</h5>
+                <button class="btn-close" onclick="closeNotification()">&times;</button>
+              </div>
+              <div class="card-body">
+                @foreach($announcements as $announcement)
+                  <div class="announcement">
+                    <h6>{{ $announcement->title }}</h6>
+                    <p>
+                      @if(strlen($announcement->content) > 50)
+                        {{ substr($announcement->content, 0, 50) }}...
+                        <a href="#" class="read-more" data-bs-toggle="modal" data-bs-target="#announcementModal" data-title="{{ $announcement->title }}" data-content="{{ $announcement->content }}">Read More</a>
+                      @else
+                        {{ $announcement->content }}
+                      @endif
+                    </p>
+                    <small class="text-muted">{{ $announcement->created_at->diffForHumans() }}</small>
+                    <hr>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="announcementModalLabel"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalContent">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
 
         <div class="container">
           <div class="page-inner">

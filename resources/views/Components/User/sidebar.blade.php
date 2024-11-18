@@ -5,7 +5,7 @@
             <div class="sidebar-logo">
                 <!-- Logo Header -->
                 <div class="logo-header" data-background-color="dark">
-                    <a href="index.html" class="logo">
+                    <a href="home" class="logo">
                         <img src="admin/assets/img/kaiadmin/logo1-removebg-preview.png" alt="navbar brand" class="navbar-brand" height="120" />
                     </a>
 
@@ -31,7 +31,24 @@
                                 <i class="fas fa-home"></i>
                                 <p>Dashboard</p>
                                 <span class="caret"></span>
+
+                                <!-- Weather Notification Badge (Red) with Bouncing Animation -->
+                                <span class="ms-2">
+                                    <strong>Tomorrow's Weather: </strong>
+                                    @if($tomorrowWeather['temperature'] && $tomorrowWeather['temperature'] > 35)
+                                        <span class="badge bg-danger text-white ms-2 bounce-animation" style="font-size: 12px;">
+                                            Hot!
+                                        </span>
+                                    @elseif($tomorrowWeather['temperature'])
+                                        <span class="badge bg-success text-white ms-2 bounce-animation" style="font-size: 12px;">
+                                            {{ $tomorrowWeather['temperature'] }}°C
+                                        </span>
+                                    @endif
+                                </span>
                             </a>
+
+
+
                             <div class="collapse" id="dashboard">
                                 <ul class="nav nav-collapse">
                                     <li>
@@ -44,6 +61,16 @@
                                             <span class="sub-item">FarmerData</span>
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="calamityReport">
+                                            <span class="sub-item">Calamity Report</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="viewcrops">
+                                            <span class="sub-item">View all Crops and Live Stocks</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -53,3 +80,27 @@
             </div>
         </div>
         <!-- End Sidebar -->
+<style>
+    @keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-5px);
+    }
+    50% {
+        transform: translateY(0);
+    }
+    75% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.bounce-animation {
+    animation: bounce 1s infinite;
+}
+
+</style>

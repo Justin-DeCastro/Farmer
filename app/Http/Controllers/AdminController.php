@@ -5,7 +5,14 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\Feedback;
 use App\Models\Farmer;
+use App\Models\FarmerAyuda;
+use App\Mail\WeatherAlert;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\SendWeatherAlertJob;
+use App\Models\Announcement;
+use App\Models\CalamityReport;
 class AdminController extends Controller
 {
 
@@ -13,6 +20,10 @@ class AdminController extends Controller
     public function admindash() {
         // Retrieve all farmers
         $farmers = Farmer::all();
+        $locationMostSentAyuda = FarmerAyuda::select('location', DB::raw('count(*) as total'))
+        ->groupBy('location')
+        ->orderByDesc('total')
+        ->first();
 
         // Unique crop types count
         $uniqueCropTypesCount = Farmer::distinct('crop_types')->count('crop_types');
@@ -47,6 +58,20 @@ class AdminController extends Controller
             ->groupBy('location')
             ->orderBy('affected_count', 'desc')
             ->first();
+            $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, YEAR(created_at) as year, location, COUNT(*) as total'))
+            ->whereIn('crop_types', $susceptibleCrops)
+            ->groupBy(DB::raw('MONTH(created_at), YEAR(created_at), location'))
+            ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at), total'), 'desc')
+            ->get();
+
+        // Prepare data with formatted month labels
+        $formattedData = $mostAffectedLocationData->map(function($item) {
+            $monthName = \Carbon\Carbon::createFromFormat('m', $item->month)->format('F'); // Format month to full name
+            $item->month_label = $monthName . ' - ' . $item->location; // Combine month and location
+            return $item;
+        });
+
+
 
         // Fetch weather prediction for tomorrow
         $apiKey = env('WEATHER_API_KEY'); // Use the API key from the .env file
@@ -66,6 +91,33 @@ class AdminController extends Controller
             'icon' => $weatherData['weather'][0]['icon'] ?? null, // Extract the icon code
         ];
 
+        // Define the temperature threshold
+        $temperatureThreshold = 35;
+
+        // Check if the temperature is below the threshold
+        if ($tomorrowWeather['temperature'] !== null && $tomorrowWeather['temperature'] < $temperatureThreshold) {
+            // Prepare email data
+            $emailData = [
+                'city' => $city,
+                'temperature' => $tomorrowWeather['temperature'],
+                'description' => $tomorrowWeather['description'],
+            ];
+
+            // Calculate the delay to 8 AM
+            $now = Carbon::now();
+            $targetTime = $now->copy()->setTimezone('Asia/Manila')->setTime(8, 0, 0);
+
+            // If 8 AM has already passed today, schedule for 8 AM the next day
+            if ($now->greaterThan($targetTime)) {
+                $targetTime->addDay();
+            }
+
+            // Calculate the delay in seconds
+            $delay = $targetTime->diffInSeconds($now);
+
+            // Dispatch the job with the calculated delay
+            dispatch(new SendWeatherAlertJob($emailData))->delay(now()->addSeconds($delay));
+        }
 
         return view('Admin.dashboard', compact(
             'uniqueCropTypesCount',
@@ -77,9 +129,13 @@ class AdminController extends Controller
             'cropDistribution',
             'recentRegistrationsCount',
             'mostAffectedLocation',
+         'mostAffectedLocationData',
+         'formattedData',
+         'locationMostSentAyuda',
             'tomorrowWeather' // Pass weather data to the view
         ));
     }
+
 
 
 
@@ -95,10 +151,22 @@ class AdminController extends Controller
         $cropDistribution = Farmer::select('crop_types', DB::raw('count(*) as total'))
         ->groupBy('crop_types')
         ->get();
-
+        $susceptibleCrops = ['corn', 'wheat', 'rice']; // Add other susceptible crop types
 // Recent registrations (adjust the query according to your registration date field)
 $recentRegistrationsCount = Farmer::where('created_at', '>=', now()->subMonth())->count();
-        return view ('Admin.FarmerCrops',compact('farmers','uniqueCropTypesCount','cropDistribution','farmersByLocation'));
+$mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, YEAR(created_at) as year, location, COUNT(*) as total'))
+            ->whereIn('crop_types', $susceptibleCrops)
+            ->groupBy(DB::raw('MONTH(created_at), YEAR(created_at), location'))
+            ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at), total'), 'desc')
+            ->get();
+
+        // Prepare data with formatted month labels
+        $formattedData = $mostAffectedLocationData->map(function($item) {
+            $monthName = \Carbon\Carbon::createFromFormat('m', $item->month)->format('F'); // Format month to full name
+            $item->month_label = $monthName . ' - ' . $item->location; // Combine month and location
+            return $item;
+        });
+        return view ('Admin.FarmerCrops',compact('farmers','uniqueCropTypesCount','cropDistribution','farmersByLocation','mostAffectedLocationData','formattedData'));
     }
     public function ViewAllCrops() {
         // Fetch all farmers' crop data
@@ -107,20 +175,105 @@ $recentRegistrationsCount = Farmer::where('created_at', '>=', now()->subMonth())
         return view('Admin.ViewAllCrops', compact('farmers')); // Pass $farmers to the view
     }
 
-
-
-    public function testimonials(){
+    public function assistance() {
+        // Fetch all farmers' crop data
+        $susceptibleCrops = ['corn', 'wheat', 'rice']; // Add other susceptible crop types
+        $farmers = Farmer::all(); // Get all farmers from the table
+        $requests = FarmerAyuda::all(); // Get all farmers from the table
+        $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, YEAR(created_at) as year, location, COUNT(*) as total'))
+        ->whereIn('crop_types', $susceptibleCrops)
+        ->groupBy(DB::raw('MONTH(created_at), YEAR(created_at), location'))
+        ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at), total'), 'desc')
+        ->get();
         $farmersByLocation = Farmer::select('location', DB::raw('count(*) as total'))
         ->groupBy('location')
         ->get();
         $cropDistribution = Farmer::select('crop_types', DB::raw('count(*) as total'))
         ->groupBy('crop_types')
         ->get();
+    // Prepare data with formatted month labels
+    $formattedData = $mostAffectedLocationData->map(function($item) {
+        $monthName = \Carbon\Carbon::createFromFormat('m', $item->month)->format('F'); // Format month to full name
+        $item->month_label = $monthName . ' - ' . $item->location; // Combine month and location
+        return $item;
+    });
+        return view('Admin.ayuda', compact('farmers','susceptibleCrops','cropDistribution','farmersByLocation','mostAffectedLocationData','formattedData','requests')); // Pass $farmers to the view
+    }
 
+    public function testimonials(){
+        $farmersByLocation = Farmer::select('location', DB::raw('count(*) as total'))
+        ->groupBy('location')
+        ->get();
+        $susceptibleCrops = ['corn', 'wheat', 'rice']; // Add other susceptible crop types
+        $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, YEAR(created_at) as year, location, COUNT(*) as total'))
+        ->whereIn('crop_types', $susceptibleCrops)
+        ->groupBy(DB::raw('MONTH(created_at), YEAR(created_at), location'))
+        ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at), total'), 'desc')
+        ->get();
+        $cropDistribution = Farmer::select('crop_types', DB::raw('count(*) as total'))
+        ->groupBy('crop_types')
+        ->get();
+        $formattedData = $mostAffectedLocationData->map(function($item) {
+            $monthName = \Carbon\Carbon::createFromFormat('m', $item->month)->format('F'); // Format month to full name
+            $item->month_label = $monthName . ' - ' . $item->location; // Combine month and location
+            return $item;
+        });
 // Recent registrations (adjust the query according to your registration date field)
 $recentRegistrationsCount = Farmer::where('created_at', '>=', now()->subMonth())->count();
         $farmers = Farmer::all(); // Get all farmers from the table
         $feedbacks = Feedback::all();
-        return view ('Admin.Testimonials',compact('feedbacks','farmers','farmersByLocation','cropDistribution','recentRegistrationsCount'));
+        return view ('Admin.Testimonials',compact('feedbacks','farmers','susceptibleCrops','formattedData','farmersByLocation','mostAffectedLocationData','cropDistribution','recentRegistrationsCount'));
+    }
+    public function announcement() {
+        // Fetch all farmers' crop data
+        $susceptibleCrops = ['corn', 'wheat', 'rice']; // Add other susceptible crop types
+        $farmers = Farmer::all(); // Get all farmers from the table
+        $requests = FarmerAyuda::all(); // Get all farmers from the table
+        $announcements = Announcement::all(); // Get all farmers from the table
+        $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, YEAR(created_at) as year, location, COUNT(*) as total'))
+        ->whereIn('crop_types', $susceptibleCrops)
+        ->groupBy(DB::raw('MONTH(created_at), YEAR(created_at), location'))
+        ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at), total'), 'desc')
+        ->get();
+        $farmersByLocation = Farmer::select('location', DB::raw('count(*) as total'))
+        ->groupBy('location')
+        ->get();
+        $cropDistribution = Farmer::select('crop_types', DB::raw('count(*) as total'))
+        ->groupBy('crop_types')
+        ->get();
+    // Prepare data with formatted month labels
+    $formattedData = $mostAffectedLocationData->map(function($item) {
+        $monthName = \Carbon\Carbon::createFromFormat('m', $item->month)->format('F'); // Format month to full name
+        $item->month_label = $monthName . ' - ' . $item->location; // Combine month and location
+        return $item;
+    });
+        return view('Admin.announcements', compact('farmers','susceptibleCrops','announcements','cropDistribution','farmersByLocation','mostAffectedLocationData','formattedData','requests')); // Pass $farmers to the view
+    }
+    public function calamity() {
+        $calamityReport = CalamityReport::all();
+        // Fetch all farmers' crop data
+        $susceptibleCrops = ['corn', 'wheat', 'rice']; // Add other susceptible crop types
+        $farmers = Farmer::all(); // Get all farmers from the table
+        $requests = FarmerAyuda::all(); // Get all farmers from the table
+        $announcements = Announcement::all(); // Get all farmers from the table
+        $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, YEAR(created_at) as year, location, COUNT(*) as total'))
+        ->whereIn('crop_types', $susceptibleCrops)
+        ->groupBy(DB::raw('MONTH(created_at), YEAR(created_at), location'))
+        ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at), total'), 'desc')
+        ->get();
+        $farmersByLocation = Farmer::select('location', DB::raw('count(*) as total'))
+        ->groupBy('location')
+        ->get();
+        $cropDistribution = Farmer::select('crop_types', DB::raw('count(*) as total'))
+        ->groupBy('crop_types')
+        ->get();
+    // Prepare data with formatted month labels
+    $formattedData = $mostAffectedLocationData->map(function($item) {
+        $monthName = \Carbon\Carbon::createFromFormat('m', $item->month)->format('F'); // Format month to full name
+        $item->month_label = $monthName . ' - ' . $item->location; // Combine month and location
+        return $item;
+    });
+        return view('Admin.calamityReport', compact('farmers','susceptibleCrops','announcements','cropDistribution','farmersByLocation','mostAffectedLocationData','formattedData','requests','calamityReport')); // Pass $farmers to the view
     }
 }
+

@@ -225,6 +225,47 @@
     });
 </script>
 <script>
+    // Most Affected Location Chart
+    const affectedData = {
+        labels: @json($formattedData->pluck('month_label')), // Use formatted month and location label
+        datasets: [{
+            label: 'Number of Affected Farmers',
+            data: @json($formattedData->pluck('total')),
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const affectedConfig = {
+        type: 'bar', // Use bar chart with horizontal orientation
+        data: affectedData,
+        options: {
+            responsive: true,
+            indexAxis: 'y', // Horizontal bar configuration
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Affected Farmers'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Locations'
+                    }
+                }
+            }
+        }
+    };
+
+    const affectedChart = new Chart(
+        document.getElementById('affectedChart'),
+        affectedConfig
+    );
+
     // Farmers by Location Chart
     const locationData = {
         labels: @json($farmersByLocation->pluck('location')),
@@ -302,3 +343,4 @@
         cropConfig
     );
 </script>
+

@@ -4,6 +4,8 @@
 @include('Components.Admin.header')
 
 
+
+
 <head>
     <link rel="icon" href="images/agtech.jfif" type="image/x-icon">
     <link rel="shortcut icon" href="images/agtech.jfif" type="image/x-icon">
@@ -28,7 +30,7 @@
             <!-- Menu -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <a href="index.html" class="app-brand-link">
+                    {{-- <a href="index.html" class="app-brand-link">
                         <span class="app-brand-logo demo">
                             <!-- SVG Logo -->
                             <svg width="25" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +39,7 @@
                             </svg>
                         </span>
                         <span class="app-brand-text demo menu-text fw-bolder ms-2">AgTech</span>
-                    </a>
+                    </a> --}}
 
                     <a href="javascript:void(0);"
                         class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -82,27 +84,27 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Crop Types</th>
-                                        <th>Livestock Types</th>
-                                        <th>Location</th>
-                                        <th>Crop Images</th>
-                                        <th>Livestock Images</th>
-                                        <th>Map</th>
+                                        <th class="strong-black">Name</th>
+                                        <th class="strong-black">Email</th>
+                                        <th class="strong-black">Phone</th>
+                                        <th class="strong-black">Crop Types</th>
+                                        <th class="strong-black">Livestock Types</th>
+                                        <th class="strong-black">Location</th>
+                                        <th class="strong-black">Crop Images</th>
+                                        <th class="strong-black">Livestock Images</th>
+                                        <th class="strong-black">Map</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($farmers as $farmer)
                                         <tr>
-                                            <td>{{ $farmer->name }}</td>
-                                            <td>{{ $farmer->email }}</td>
-                                            <td>{{ $farmer->phone }}</td>
-                                            <td>{{ $farmer->crop_types }}</td>
-                                            <td>{{ $farmer->livestock_types }}</td>
-                                            <td>{{ $farmer->location }}</td>
-                                            <td>
+                                            <td class="strong-black">{{ $farmer->name }}</td>
+                                            <td class="strong-black">{{ $farmer->email }}</td>
+                                            <td class="strong-black">{{ $farmer->phone }}</td>
+                                            <td class="strong-black">{{ $farmer->crop_types }}</td>
+                                            <td class="strong-black">{{ $farmer->livestock_types }}</td>
+                                            <td class="strong-black">{{ $farmer->location }}</td>
+                                            <td class="strong-black">
                                                 @if ($farmer->crop_images)
                                                     @foreach (json_decode($farmer->crop_images) as $image)
                                                         <a href="{{ asset($image) }}" data-lightbox="crop-images"
@@ -115,7 +117,7 @@
                                                     <p>No crop images available</p>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="strong-black">
                                                 @if ($farmer->livestock_images)
                                                     @foreach (json_decode($farmer->livestock_images) as $image)
                                                         <a href="{{ asset($image) }}" data-lightbox="livestock-images"
@@ -128,7 +130,7 @@
                                                     <p>No livestock images available</p>
                                                 @endif
                                             </td>
-                                            <td>
+                                              <td class="strong-black">
                                                 <button class="btn btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#mapModal" data-location="{{ $farmer->location }}">
                                                     <i class="fas fa-eye"></i>

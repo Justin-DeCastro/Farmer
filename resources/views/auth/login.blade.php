@@ -6,7 +6,9 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh; /* Full viewport height */
-        background-color: #f4f4f4; /* Light background color for contrast */
+        background-image: url('images/farner.webp'); /* Background image */
+        background-size: cover; /* Cover the entire container */
+        background-position: center; /* Center the image */
     }
 
     /* Card styling */
@@ -14,7 +16,7 @@
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         overflow: hidden;
-        background-color: #fff;
+        background-color: rgba(255, 255, 255, 0); /* Transparent background */
         max-width: 400px;
         width: 100%;
         padding: 20px;
@@ -22,7 +24,7 @@
 
     /* Header styling */
     .login-header {
-        background-color: #007bff;
+
         color: #fff;
         text-align: center;
         padding: 15px;
@@ -33,11 +35,13 @@
     /* Body styling */
     .login-body {
         padding: 20px;
+        background-color: rgba(255, 255, 255, 0.6); /* Slight transparency for the form body */
+        border-radius: 8px;
     }
 
     /* Button styling */
     .login-btn {
-        background-color: #007bff;
+        background-color: rgba(0, 123, 255, 0.8); /* Slight transparency for button */
         color: #fff;
         border: none;
         border-radius: 8px;
@@ -49,7 +53,7 @@
     }
 
     .login-btn:hover {
-        background-color: #0056b3;
+        background-color: rgba(0, 86, 179, 0.8);
         transform: scale(1.02);
     }
 
@@ -65,6 +69,7 @@
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
         border: 1px solid #ddd;
         width: 100%;
+        background-color: rgba(255, 255, 255, 0.8); /* Slight transparency for input fields */
     }
 
     .form-control:focus {

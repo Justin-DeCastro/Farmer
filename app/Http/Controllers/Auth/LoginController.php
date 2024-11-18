@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -20,7 +19,15 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('/');
+            // Get the authenticated user
+            $user = Auth::user();
+
+            // Check the role of the user
+            if ($user->role == 'admin') {
+                return redirect()->route('admindash'); // Redirect to admin dashboard
+            } else {
+                return redirect()->route('home'); // Redirect to the home page for regular users
+            }
         }
 
         return redirect()->back()->withErrors([
@@ -31,6 +38,6 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-        return redirect('/');
+        return redirect('/'); // Redirect to login page after logout
     }
 }
