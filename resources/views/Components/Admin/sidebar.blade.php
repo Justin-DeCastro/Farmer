@@ -48,13 +48,59 @@
 
     <!-- Calamity Report -->
     <li class="menu-item {{ Request::is('calamityReportAdmin') ? 'active' : '' }}">
-        <a href="calamityReportAdmin" class="menu-link">
+        <a href="{{ route('calamityReportAdmin') }}" class="menu-link">
             <i class="menu-icon fas fa-exclamation-triangle"></i>
             <div data-i18n="Without navbar">Calamity Report</div>
+            @if($newReportsCount > 0)
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">{{ $newReportsCount }}</span>
+                </div>
+            @endif
         </a>
     </li>
+    <li class="menu-item {{ Request::is('userAccount') ? 'active' : '' }}">
+        <a href="userAccount" class="menu-link">
+            <i class="menu-icon fas fa-hands-helping"></i>
+            <div data-i18n="Without navbar">Users</div>
+        </a>
+    </li>
+    <li class="menu-item">
+        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+            @csrf
+            <button type="submit" class="menu-link" style="background: none; border: none; padding: 10px 20px; display: flex; align-items: center;">
+                <i class="menu-icon fas fa-sign-out-alt"></i>
+                <div data-i18n="Logout">Logout</div>
+            </button>
+        </form>
+    </li>
+
+
 </ul>
 <style>
+
+.notification-bell {
+    position: relative;
+    margin-left: 10px;
+}
+
+.notification-bell .fa-bell {
+    color: #dc3545; /* Red bell icon */
+    font-size: 1.2rem;
+}
+
+.notification-bell .badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    padding: 3px 6px;
+}
+
+
     .menu-inner {
     background-color: transparent; /* No background color */
     border-radius: 8px;

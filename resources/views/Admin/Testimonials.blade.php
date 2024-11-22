@@ -66,7 +66,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>User</th> <!-- Updated column name -->
                             <th>Email</th>
                             <th>Message</th>
                             <th>Actions</th>
@@ -75,7 +75,8 @@
                     <tbody>
                         @foreach($feedbacks as $feedback)
                             <tr>
-                                <td>{{ $feedback->name }}</td>
+                                <!-- Display the user's name instead of the user_id -->
+                                <td>{{ $feedback->user ? $feedback->user->name : 'Unknown' }}</td> <!-- Get user name, fallback to 'Unknown' if no user -->
                                 <td>{{ $feedback->email }}</td>
                                 <td>{{ $feedback->message }}</td>
                                 <td>
@@ -97,6 +98,7 @@
                         @endforeach
                     </tbody>
                 </table>
+
               </div>
             </div>
             <!-- / Table -->

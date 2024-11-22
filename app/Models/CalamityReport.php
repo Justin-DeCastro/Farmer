@@ -16,5 +16,6 @@ class CalamityReport extends Model
         'location',
         'description',
         'status',
+        'image',
     ];
 }

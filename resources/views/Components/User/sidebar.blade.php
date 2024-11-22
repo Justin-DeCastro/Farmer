@@ -25,14 +25,11 @@
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
-                    <ul class="nav nav-secondary">
-                        <li class="nav-item active">
-                            <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
+                    <ul class="nav nav-secondary flex-column">
+                        <li class="nav-item">
+                            <a href="home" class="nav-link {{ Request::is('home') ? 'active' : '' }}">
                                 <i class="fas fa-home"></i>
                                 <p>Dashboard</p>
-                                <span class="caret"></span>
-
-                                <!-- Weather Notification Badge (Red) with Bouncing Animation -->
                                 <span class="ms-2">
                                     <strong>Tomorrow's Weather: </strong>
                                     @if($tomorrowWeather['temperature'] && $tomorrowWeather['temperature'] > 35)
@@ -46,36 +43,46 @@
                                     @endif
                                 </span>
                             </a>
-
-
-
-                            <div class="collapse" id="dashboard">
-                                <ul class="nav nav-collapse">
-                                    <li>
-                                        <a href="feedback">
-                                            <span class="sub-item">Feedback</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="farmerdata">
-                                            <span class="sub-item">FarmerData</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="calamityReport">
-                                            <span class="sub-item">Calamity Report</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="viewcrops">
-                                            <span class="sub-item">View all Crops and Live Stocks</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="feedback" class="nav-link {{ Request::is('feedback') ? 'active' : '' }}">
+                                <i class="fas fa-comment-dots"></i>
+                                <span class="sub-item">Feedback</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="farmerdata" class="nav-link {{ Request::is('farmerdata') ? 'active' : '' }}">
+                                <i class="fas fa-users"></i>
+                                <span class="sub-item">Farmer Data</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="calamityReport" class="nav-link {{ Request::is('calamityReport') ? 'active' : '' }}">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span class="sub-item">Calamity Report</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="viewcrops" class="nav-link {{ Request::is('viewcrops') ? 'active' : '' }}">
+                                <i class="fas fa-leaf"></i>
+                                <span class="sub-item">View all Crops and Live Stocks</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="editAccount" class="nav-link {{ Request::is('editAccount') ? 'active' : '' }}">
+                                <i class="fas fa-user-cog"></i>
+                                <span class="sub-item">Account</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('logout') }}" class="nav-link logout-btn" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
                     </ul>
+
                 </div>
             </div>
         </div>
@@ -104,3 +111,26 @@
 }
 
 </style>
+<script>
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+        e.preventDefault();  // Prevent the default link behavior (page navigation)
+
+        // Send an AJAX request to logout
+        fetch("{{ route('logout') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'  // CSRF Token for protection
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                // Redirect to login page or home after logout
+                window.location.href = "{{ url('login') }}";  // Or adjust the redirect as needed
+            }
+        })
+        .catch(error => {
+            console.error('Error logging out:', error);
+        });
+    });
+</script>

@@ -32,20 +32,24 @@ class FeedbackController extends Controller
         ]);
     }
     public function store(Request $request)
-    {
-        // Validate the incoming request
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'message' => 'required|string',
-        ]);
+{
+    // Validate the incoming request
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'message' => 'required|string',
+    ]);
 
-        // Create a new feedback record
-        Feedback::create($validated);
+    // Add the authenticated user's ID to the validated data
+    $validated['user_id'] = auth()->id(); // This will add the currently authenticated user's ID
 
-        // Redirect or respond with a success message
-        return redirect()->back()->with('success', 'Feedback submitted successfully!');
-    }
+    // Create a new feedback record with the user_id
+    Feedback::create($validated);
+
+    // Redirect or respond with a success message
+    return redirect()->back()->with('success', 'Feedback submitted successfully!');
+}
+
     public function update(Request $request, $id)
 {
     $request->validate([

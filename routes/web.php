@@ -74,3 +74,16 @@ Route::get('calamityReport', [HomeController::class, 'calamityReport'])->name('c
 Route::get('calamityReportAdmin', [AdminController::class, 'calamity'])->name('calamityReportAdmin');
 Route::patch('/calamity-report/{id}/complete', [CalamityReportController::class, 'markAsCompleted'])->name('calamity-report.complete');
 Route::delete('/calamity-report/{id}/delete', [CalamityReportController::class, 'delete'])->name('calamity-report.delete');
+Route::post('calamity-report/upload-image/{id}', [CalamityReportController::class, 'uploadImage'])->name('calamity-report.upload-image');
+
+
+
+
+//user  account
+Route::get('userAccount', [AdminController::class, 'userAccount'])->name('userAccount');
+Route::patch('calamity-report/cancel/{id}', [CalamityReportController::class, 'cancel'])->name('calamity-report.cancel');
+Route::get('editAccount', [HomeController::class, 'editAccount'])->name('editAccount');
+Route::put('/profile/update', [HomeController::class, 'updateProfile'])->name('profile.update');
+
+
+//

@@ -19,6 +19,7 @@ class Farmer extends Model
         'livestock_types',
         'crop_images',       // Updated to handle multiple images
         'livestock_images',  // Updated to handle multiple images
+        'user_id',
     ];
 
     // Cast the fields to array for easier access in application logic

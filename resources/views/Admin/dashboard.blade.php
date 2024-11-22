@@ -97,23 +97,30 @@
                                         <!-- Good Day Section -->
                                         <div class="col-sm-12 col-md-6">
                                             <div class="card-body">
-                                                <h5 class="card-title text-primary"><i class="fas fa-smile"></i> Good Day! Admin 🎉</h5>
+                                                <h5 class="card-title text-primary">
+                                                    <i class="fas fa-smile"></i> Good Day, {{ Auth::user()->name }} 🎉
+                                                </h5>
+
                                                 <p class="mb-4">
                                                     <!-- Weather Prediction Section -->
-                                                    <div class="weather-prediction">
-                                                        <h3><i class="fas fa-sun"></i> Weather Prediction for Tomorrow - Oriental Mindoro</h3>
-                                                        @if (isset($tomorrowWeather['temperature']) && isset($tomorrowWeather['description']))
-                                                            <p><i class="fas fa-thermometer-half"></i> Temperature: {{ $tomorrowWeather['temperature'] }} °C</p>
-                                                            <p><i class="fas fa-cloud-sun"></i> Condition: {{ ucfirst($tomorrowWeather['description']) }}
-                                                                @if (isset($tomorrowWeather['icon']))
-                                                                    <img src="https://openweathermap.org/img/wn/{{ $tomorrowWeather['icon'] }}@2x.png"
-                                                                        alt="{{ $tomorrowWeather['description'] }}" />
-                                                                @endif
-                                                            </p>
-                                                        @else
-                                                            <p><i class="fas fa-times-circle"></i> Weather data is currently unavailable. Please try again later.</p>
-                                                        @endif
-                                                    </div>
+                                                <div class="weather-prediction">
+                                                    <h3><i class="fas fa-sun"></i> Weather Prediction for Tomorrow -
+                                                        Oriental Mindoro</h3>
+                                                    @if (isset($tomorrowWeather['temperature']) && isset($tomorrowWeather['description']))
+                                                        <p><i class="fas fa-thermometer-half"></i> Temperature:
+                                                            {{ $tomorrowWeather['temperature'] }} °C</p>
+                                                        <p><i class="fas fa-cloud-sun"></i> Condition:
+                                                            {{ ucfirst($tomorrowWeather['description']) }}
+                                                            @if (isset($tomorrowWeather['icon']))
+                                                                <img src="https://openweathermap.org/img/wn/{{ $tomorrowWeather['icon'] }}@2x.png"
+                                                                    alt="{{ $tomorrowWeather['description'] }}" />
+                                                            @endif
+                                                        </p>
+                                                    @else
+                                                        <p><i class="fas fa-times-circle"></i> Weather data is currently
+                                                            unavailable. Please try again later.</p>
+                                                    @endif
+                                                </div>
                                                 </p>
                                             </div>
                                         </div>
@@ -121,20 +128,24 @@
                                         <!-- Most Affected Location and Stats -->
                                         <div class="col-sm-12 col-md-6">
                                             <div class="card-body">
-                                                <h2 class="h5"><i class="fas fa-map-marker-alt"></i> Most Affected Location by Weather</h2>
+                                                <h2 class="h5"><i class="fas fa-map-marker-alt"></i> Most Affected
+                                                    Location by Weather</h2>
                                                 @if ($mostAffectedLocation)
-                                                    <p><i class="fas fa-location-arrow"></i> <strong>Location:</strong> Bambanin, Victoria, Oriental Mindoro</p>
-                                                    <p><i class="fas fa-exclamation-triangle" style="color: red;"></i> <strong>Affected Farmer Count:</strong> 2</p>
-
+                                                    <p><i class="fas fa-location-arrow"></i> <strong>Location:</strong>
+                                                        Bambanin, Victoria, Oriental Mindoro</p>
+                                                    <p><i class="fas fa-exclamation-triangle" style="color: red;"></i>
+                                                        <strong>Affected Farmer Count:</strong> 2</p>
                                                 @else
-                                                    <p><i class="fas fa-exclamation-circle"></i> No affected locations found.</p>
+                                                    <p><i class="fas fa-exclamation-circle"></i> No affected locations
+                                                        found.</p>
                                                 @endif
 
                                                 <hr>
 
                                                 <div class="d-flex justify-content-between">
                                                     <!-- Total Number of Crops Box -->
-                                                    <div class="border p-2 rounded d-flex flex-column align-items-center justify-content-center" style="height: 150px;">
+                                                    <div class="border p-2 rounded d-flex flex-column align-items-center justify-content-center"
+                                                        style="height: 150px;">
                                                         <span class="fw-semibold d-block mb-1">
                                                             <i class="fas fa-seedling fa-3x"></i> Total Number of Crops
                                                         </span>
@@ -144,9 +155,11 @@
                                                     </div>
 
                                                     <!-- Total Number of Live Stocks Box -->
-                                                    <div class="border p-2 rounded d-flex flex-column align-items-center justify-content-center" style="height: 150px;">
+                                                    <div class="border p-2 rounded d-flex flex-column align-items-center justify-content-center"
+                                                        style="height: 150px;">
                                                         <span class="fw-semibold d-block mb-1">
-                                                            <i class="fas fa-piggy-bank fa-3x"></i> Total Number of Live Stocks
+                                                            <i class="fas fa-piggy-bank fa-3x"></i> Total Number of Live
+                                                            Stocks
                                                         </span>
                                                         <h3 class="card-title mb-0">
                                                             <i class="fas fa-pig fa-3x"></i> {{ $uniqueCropTypesCount }}

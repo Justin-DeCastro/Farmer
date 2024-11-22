@@ -55,14 +55,14 @@
                     @csrf
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>
+                        <input type="text" id="name" name="name" class="form-control" value="{{ old('name', auth()->user()->name) }}" required readonly>
                         @error('name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required>
+                        <input type="email" id="email" name="email" class="form-control" value="{{ old('email', auth()->user()->email) }}" required readonly>
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -76,6 +76,7 @@
                     </div>
                     <button type="submit" class="btn-submit">Submit Feedback</button>
                 </form>
+
             </div>
         </div>
     </div>
