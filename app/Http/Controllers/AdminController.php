@@ -205,31 +205,44 @@ $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, 
         return view('Admin.ayuda', compact('farmers','susceptibleCrops','newReportsCount','cropDistribution','farmersByLocation','mostAffectedLocationData','formattedData','requests')); // Pass $farmers to the view
     }
 
-    public function testimonials(){
+    public function testimonials()
+    {
+        // Auto-update unread feedbacks to "Read"
+        Feedback::where('status', 'Unread')->update(['status' => 'Viewed... Thank You for your Feedback']);
+
         $newReportsCount = CalamityReport::where('created_at', '>=', now()->subDay())->count();
+
         $farmersByLocation = Farmer::select('location', DB::raw('count(*) as total'))
-        ->groupBy('location')
-        ->get();
+            ->groupBy('location')
+            ->get();
+
         $susceptibleCrops = ['corn', 'wheat', 'rice']; // Add other susceptible crop types
+
         $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, YEAR(created_at) as year, location, COUNT(*) as total'))
-        ->whereIn('crop_types', $susceptibleCrops)
-        ->groupBy(DB::raw('MONTH(created_at), YEAR(created_at), location'))
-        ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at), total'), 'desc')
-        ->get();
+            ->whereIn('crop_types', $susceptibleCrops)
+            ->groupBy(DB::raw('MONTH(created_at), YEAR(created_at), location'))
+            ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at), total'), 'desc')
+            ->get();
+
         $cropDistribution = Farmer::select('crop_types', DB::raw('count(*) as total'))
-        ->groupBy('crop_types')
-        ->get();
-        $formattedData = $mostAffectedLocationData->map(function($item) {
+            ->groupBy('crop_types')
+            ->get();
+
+        $formattedData = $mostAffectedLocationData->map(function ($item) {
             $monthName = \Carbon\Carbon::createFromFormat('m', $item->month)->format('F'); // Format month to full name
             $item->month_label = $monthName . ' - ' . $item->location; // Combine month and location
             return $item;
         });
-// Recent registrations (adjust the query according to your registration date field)
-$recentRegistrationsCount = Farmer::where('created_at', '>=', now()->subMonth())->count();
+
+        // Recent registrations (adjust the query according to your registration date field)
+        $recentRegistrationsCount = Farmer::where('created_at', '>=', now()->subMonth())->count();
+
         $farmers = Farmer::all(); // Get all farmers from the table
-        $feedbacks = Feedback::all();
-        return view ('Admin.Testimonials',compact('feedbacks','farmers','newReportsCount','susceptibleCrops','formattedData','farmersByLocation','mostAffectedLocationData','cropDistribution','recentRegistrationsCount'));
+        $feedbacks = Feedback::all(); // Fetch all feedbacks (status is already updated)
+
+        return view('Admin.Testimonials', compact('feedbacks', 'farmers', 'newReportsCount', 'susceptibleCrops', 'formattedData', 'farmersByLocation', 'mostAffectedLocationData', 'cropDistribution', 'recentRegistrationsCount'));
     }
+
     public function announcement() {
         $newReportsCount = CalamityReport::where('created_at', '>=', now()->subDay())->count();
         // Fetch all farmers' crop data

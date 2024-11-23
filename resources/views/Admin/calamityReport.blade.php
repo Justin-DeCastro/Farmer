@@ -75,29 +75,46 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <!-- Image Upload Button, triggers modal -->
-                                                    @if ($report->status !== 'completed') <!-- Hide button if status is completed -->
-                                                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#uploadImageModal{{ $report->id }}">Upload Image</button>
-                                                    @endif
-
-                                                    <!-- Mark as Completed Action -->
-                                                    @if ($report->status !== 'completed' && $report->status !== 'canceled')
-                                                        <form action="{{ route('calamity-report.complete', $report->id) }}" method="post" style="display: inline;">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-sm btn-success">Mark as Completed</button>
-                                                        </form>
-                                                    @endif
-
-                                                    @if ($report->status !== 'canceled')
-                                                        <!-- Cancel Action -->
-                                                        <form action="{{ route('calamity-report.cancel', $report->id) }}" method="post" style="display: inline;">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-sm btn-secondary">Cancel</button>
-                                                        </form>
-                                                    @endif
+                                                    <!-- Dropdown Menu -->
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton{{ $report->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            Actions
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $report->id }}">
+                                                            @if ($report->status !== 'completed')
+                                                                <!-- Upload Image Action -->
+                                                                <li>
+                                                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#uploadImageModal{{ $report->id }}">Upload Image</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($report->status !== 'completed' && $report->status !== 'canceled')
+                                                                <!-- Mark as Completed Action -->
+                                                                <li>
+                                                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('completeForm{{ $report->id }}').submit();">
+                                                                        Mark as Completed
+                                                                    </a>
+                                                                    <form id="completeForm{{ $report->id }}" action="{{ route('calamity-report.complete', $report->id) }}" method="post" style="display: none;">
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                    </form>
+                                                                </li>
+                                                            @endif
+                                                            @if ($report->status !== 'canceled')
+                                                                <!-- Cancel Action -->
+                                                                <li>
+                                                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('cancelForm{{ $report->id }}').submit();">
+                                                                        Cancel
+                                                                    </a>
+                                                                    <form id="cancelForm{{ $report->id }}" action="{{ route('calamity-report.cancel', $report->id) }}" method="post" style="display: none;">
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                    </form>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
+                                                    </div>
                                                 </td>
+
                                             </tr>
 
                                             <!-- Modal for Image Upload -->

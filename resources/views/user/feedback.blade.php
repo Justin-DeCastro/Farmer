@@ -4,32 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agtech</title>
-    <link rel="stylesheet" href="admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <style>
         .background-container {
-            min-height: 100vh; /* Ensures it covers the entire viewport */
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
+            padding: 20px 10px;
+            background: url('images/farner.webp') no-repeat center center;
+            background-size: cover;
         }
-        .feedback-form {
-            max-width: 600px;
+
+        .feedback-table {
+            max-width: 100%;
             width: 100%;
             padding: 20px;
-            border: none; /* Removed border for seamless look */
-            border-radius: 8px;
-            background-color: rgba(249, 249, 249, 0.3); /* Increased transparency */
-            backdrop-filter: blur(5px); /* Optional blur effect */
+            background-color: rgba(249, 249, 249, 0.3);
+            backdrop-filter: blur(5px);
+            color: #333;
         }
-        .feedback-form h3 {
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-control {
-            border-radius: 4px;
-        }
+
         .btn-submit {
             background-color: #007bff;
             color: #fff;
@@ -38,8 +33,25 @@
             padding: 10px 20px;
             cursor: pointer;
         }
+
         .btn-submit:hover {
             background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .btn-submit {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .feedback-table h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .modal-content {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -48,9 +60,48 @@
     @include('Components.User.sidebar')
 
     <div class="main-panel">
-        <div class="background-container" style="background: url('images/farner.webp') no-repeat center center; background-size: cover;">
-            <div class="feedback-form">
-                <h3 class="fw-bold mb-3">Submit Your Feedback</h3>
+        <div class="background-container">
+            <div class="feedback-table">
+                <h3 class="fw-bold mb-3">Feedback Reports</h3>
+                <button class="btn-submit" data-bs-toggle="modal" data-bs-target="#calamityReportModal">Submit Feedback</button>
+                <div class="table-responsive mt-3">
+                    <table id="calamityReportsTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Farmer Name</th>
+                                <th>Email</th>
+                                <th>Message</th>
+
+                                <th>Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($feedbacks as $report)
+                                <tr>
+                                    <td>{{ $report->name }}</td>
+                                    <td>{{ $report->email }}</td>
+                                    <td>{{ $report->message }}</td>
+                                    <td>{{ $report->status }}</td>
+
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for submitting calamity report -->
+    <div class="modal fade" id="calamityReportModal" tabindex="-1" aria-labelledby="calamityReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="calamityReportModalLabel">Submit Your Feedback Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
                 <form action="{{ route('feedback.store') }}" method="post" id="feedbackForm">
                     @csrf
                     <div class="form-group">
@@ -76,17 +127,13 @@
                     </div>
                     <button type="submit" class="btn-submit">Submit Feedback</button>
                 </form>
-
             </div>
         </div>
     </div>
 
     <!-- Core JS Files -->
-    <script src="admin/assets/js/core/jquery-3.7.1.min.js"></script>
-    <script src="admin/assets/js/core/popper.min.js"></script>
-    <script src="admin/assets/js/core/bootstrap.min.js"></script>
-
-    <!-- Bootstrap Notify -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="admin/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
 
     <script>
@@ -97,10 +144,10 @@
                     message: "{{ session('success') }}"
                 }, {
                     type: 'success',
-                    delay: 5000, // 5 seconds
+                    delay: 5000,
                     placement: {
                         from: "top",
-                        align: "right" // Align toast to the right
+                        align: "right"
                     },
                     animate: {
                         enter: 'animated fadeInDown',
@@ -109,19 +156,11 @@
                 });
             });
         @endif
-    </script>
 
-    <!-- Other JS Files -->
-    <script src="admin/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-    <script src="admin/assets/js/plugin/chart.js/chart.min.js"></script>
-    <script src="admin/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
-    <script src="admin/assets/js/plugin/chart-circle/circles.min.js"></script>
-    <script src="admin/assets/js/plugin/datatables/datatables.min.js"></script>
-    <script src="admin/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
-    <script src="admin/assets/js/plugin/jsvectormap/world.js"></script>
-    <script src="admin/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-    <script src="admin/assets/js/kaiadmin.min.js"></script>
-    <script src="admin/assets/js/setting-demo.js"></script>
-    {{-- <script src="admin/assets/js/demo.js"></script> --}}
+        // Initialize DataTable for calamity reports
+        $(document).ready(function() {
+            $('#calamityReportsTable').DataTable();
+        });
+    </script>
 </body>
 </html>

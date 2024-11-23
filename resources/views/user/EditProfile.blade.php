@@ -6,39 +6,125 @@
     <title>Profile Page</title>
     <link rel="stylesheet" href="admin/assets/css/bootstrap.min.css">
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+        }
+
         .background-container {
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            background-color: #e9eff1;
+            background-image: url('images/farner.webp');
+            background-position: center;
+            background-size: cover;
+            background-blur: 5px;
         }
-        .profile-form {
-            max-width: 600px;
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
             width: 100%;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: rgba(249, 249, 249, 0.3);
-            backdrop-filter: blur(5px);
+            max-width: 750px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .profile-form h3 {
+
+        .profile-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #3b5998;
+        }
+
+        .form-group {
             margin-bottom: 20px;
         }
-        .form-group {
-            margin-bottom: 15px;
+
+        .form-group label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
         }
+
         .form-control {
-            border-radius: 4px;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-size: 14px;
         }
+
+        .form-control:focus {
+            border-color: #3b5998;
+            box-shadow: 0 0 5px rgba(59, 89, 152, 0.5);
+        }
+
         .btn-submit {
-            background-color: #007bff;
-            color: #fff;
+            background-color: #3b5998;
+            color: white;
             border: none;
-            border-radius: 4px;
-            padding: 10px 20px;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
+
         .btn-submit:hover {
-            background-color: #0056b3;
+            background-color: #365899;
+        }
+
+        .profile-picture {
+            width: 150px;  /* Increased size */
+            height: 150px; /* Increased size */
+            border-radius: 50%; /* Keep the container round */
+            background-color: #e9eff1;
+            border: 2px solid #ddd;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            overflow: hidden; /* Ensure the image doesn't overflow */
+        }
+
+        .profile-picture img {
+            width: 100%; /* Ensure the image covers the container */
+            height: 100%; /* Ensure the image covers the container */
+            object-fit: cover; /* Crop the image to maintain aspect ratio */
+            border-radius: 50%; /* Keep the image itself round */
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-info h4 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
+
+        /* Hide the file input field */
+        #imageInput {
+            display: none;
         }
     </style>
 </head>
@@ -47,43 +133,54 @@
     @include('Components.User.sidebar')
 
     <div class="main-panel">
-        <div class="background-container" style="background: url('images/farner.webp') no-repeat center center; background-size: cover;">
-            <div class="profile-form">
-                <h3 class="fw-bold mb-3">Update Your Profile</h3>
-                <form action="{{ route('profile.update') }}" method="post" id="profileForm">
+        <div class="background-container">
+            <div class="profile-card">
+                <h3 class="fw-bold mb-3 text-center">Update Your Profile</h3>
+                <form action="{{ route('profile.update') }}" method="post" id="profileForm" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+
+                    <!-- Profile Picture Preview and File Input Inside the Form -->
+                    <label for="imageInput" class="profile-picture">
+                        <!-- Current profile picture preview -->
+                        <img src="{{ asset(auth()->user()->profile_picture) }}" alt="Profile Picture" class="img-fluid">
+                    </label>
+                    <!-- Hidden file input -->
+                    <input type="file" id="imageInput" name="profile_picture" accept="image/*" onchange="updateImagePreview(this)">
+
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" class="form-control"
                             value="{{ old('name', auth()->user()->name) }}" required>
                         @error('name')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
+
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">Email Address</label>
                         <input type="email" id="email" name="email" class="form-control"
                             value="{{ old('email', auth()->user()->email) }}" required>
                         @error('email')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
+
                     <div class="form-group">
                         <label for="rs">RS</label>
                         <input type="text" id="rs" name="rs" class="form-control"
                             value="{{ old('rs', auth()->user()->rs) }}">
                         @error('rs')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password">New Password</label>
                         <input type="password" id="password" name="password" class="form-control"
-                            placeholder="Enter new password (leave blank to keep current)">
+                            placeholder="Leave blank to keep current password">
                         @error('password')
-                            <div class="text-danger">{{ $message }}</div>
+                            <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -116,6 +213,15 @@
                 });
             });
         @endif
+
+        // Update the profile picture preview when a new file is selected
+        function updateImagePreview(input) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-picture img').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     </script>
 </body>
 </html>
