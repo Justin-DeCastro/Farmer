@@ -63,37 +63,46 @@
                         <h5 class="card-header">Messages</h5>
                         <!-- Add a container div for positioning -->
                         <div class="button-container" style="display: flex; justify-content: flex-end;">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#farmerAyudaModal">
-                                Submit Assistance
-                            </button>
+
                         </div>
 
                         <div class="table-responsive text-nowrap">
-                            <table class="table table-bordered">
+                            <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Farmer Name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Farm Location</th>
-                                        <th scope="col">Supply to Give</th>
-                                        <th scope="col">Date Submitted</th>
+                                        <th>Farmer Name</th>
+                                        <th>Email</th>
+                                        <th>Location</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Image</th> <!-- Add a column for the image -->
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($requests as $request)
-                                        <tr>
-                                            <th scope="row">{{ $loop->iteration }}</th>
-                                            <td>{{ $request->name }}</td>
-                                            <td>{{ $request->email }}</td>
-                                            <td>{{ $request->location }}</td>
-                                            <td>{{ $request->request }}</td>
-                                            <td>{{ $request->created_at->format('Y-m-d H:i:s') }}</td>
-                                        </tr>
+                                    @foreach ($calamityReport as $report)
+                                        @if ($report->status === 'completed') <!-- Filter only completed reports -->
+                                            <tr>
+                                                <td>{{ $report->reporter_name }}</td>
+                                                <td>{{ $report->email }}</td>
+                                                <td>{{ $report->location }}</td>
+                                                <td>{{ $report->description }}</td>
+                                                <td>
+                                                    <span class="badge" style="background-color: #28a745; color: white;">Completed</span>
+                                                </td>
+                                                <td>
+                                                    <!-- Check if an image exists for the report and display it -->
+                                                    @if ($report->image_path)
+                                                        <img src="{{ asset($report->image_path) }}" alt="Report Image" style="width: 100px; height: auto;">
+                                                    @else
+                                                        No image uploaded
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
 

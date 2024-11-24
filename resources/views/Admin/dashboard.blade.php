@@ -186,7 +186,7 @@
                             <!-- Crop Type Distribution Chart -->
                             <div class="col-md-6 mb-4">
                                 <div style="height: 200px;">
-                                    <canvas id="cropChart" style="width: 100%; height: 100%;"></canvas>
+                                    <canvas id="cropAndLivestockChart" style="width: 100%; height: 100%;"></canvas>
                                 </div>
                             </div>
 

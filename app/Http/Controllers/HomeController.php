@@ -7,15 +7,23 @@ use App\Models\CalamityReport;
 use App\Models\Announcement;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function home() {
-        // Retrieve the count of feedbacks
+        // Retrieve the count of feedbacks for the currently logged-in user
+        $feedbackCount = Feedback::where('user_id', Auth::id())->count();
+
+        // Retrieve the latest 5 announcements
         $announcements = Announcement::latest()->take(5)->get();
-        $feedbackCount = Feedback::count();
+
+        // Count unique crop types and livestock types from the Farmer model
         $uniqueCropTypesCount = Farmer::distinct('crop_types')->count('crop_types');
         $uniqueLivestockCount = Farmer::distinct('livestock_types')->count('livestock_types');
+
+        // Get the total number of submitted reports
+        $totalReportsCount = CalamityReport::where('user_id', Auth::id())->count();
 
         // Fetch current weather and forecast for tomorrow
         $apiKey = env('WEATHER_API_KEY');
@@ -38,6 +46,7 @@ class HomeController extends Controller
             'feedbackCount',
             'uniqueCropTypesCount',
             'uniqueLivestockCount',
+            'totalReportsCount', // Pass total reports count
             'announcements',
             'tomorrowWeather' // Pass weather data to the view
         ));

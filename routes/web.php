@@ -27,7 +27,10 @@ use App\Http\Controllers\CalamityReportController;
 // });
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('home', [HomeController::class, 'home'])->name('home');
-Route::get('admindash', [AdminController::class, 'admindash'])->name('admindash');
+Route::get('admindash', [AdminController::class, 'admindash'])
+    ->name('admindash')
+    ->middleware('auth'); // Ensure the user is authenticated
+
 Route::get('admintestimonials', [AdminController::class, 'testimonials'])->name('admintestimonials');
 // Route::get('feedback', [HomeController::class, 'feedback'])->name('userfeedback');
 Route::get('farmersCrops', [AdminController::class, 'farmersCrops'])->name('farmersCrops');
@@ -75,13 +78,13 @@ Route::get('calamityReportAdmin', [AdminController::class, 'calamity'])->name('c
 Route::patch('/calamity-report/{id}/complete', [CalamityReportController::class, 'markAsCompleted'])->name('calamity-report.complete');
 Route::delete('/calamity-report/{id}/delete', [CalamityReportController::class, 'delete'])->name('calamity-report.delete');
 Route::post('calamity-report/upload-image/{id}', [CalamityReportController::class, 'uploadImage'])->name('calamity-report.upload-image');
-
+Route::patch('calamity-report/cancel/{id}', [CalamityReportController::class, 'cancel'])->name('calamity-report.cancel');
 
 
 
 //user  account
 Route::get('userAccount', [AdminController::class, 'userAccount'])->name('userAccount');
-Route::patch('calamity-report/cancel/{id}', [CalamityReportController::class, 'cancel'])->name('calamity-report.cancel');
+
 Route::get('editAccount', [HomeController::class, 'editAccount'])->name('editAccount');
 Route::put('/profile/update', [HomeController::class, 'updateProfile'])->name('profile.update');
 

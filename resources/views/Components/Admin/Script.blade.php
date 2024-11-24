@@ -225,12 +225,12 @@
     });
 </script>
 <script>
-    // Most Affected Location Chart
+    // Most Affected Location Chart (Number of Farmers by Location)
     const affectedData = {
         labels: @json($formattedData->pluck('month_label')), // Use formatted month and location label
         datasets: [{
             label: 'Number of Affected Farmers',
-            data: @json($formattedData->pluck('total')),
+            data: @json($formattedData->pluck('total')), // Ensure this is the correct field for the total number of farmers
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 1
@@ -266,12 +266,12 @@
         affectedConfig
     );
 
-    // Farmers by Location Chart
+    // Farmers by Location Chart (Number of Farmers by Location)
     const locationData = {
-        labels: @json($farmersByLocation->pluck('location')),
+        labels: @json($farmersByLocation->pluck('location')), // Locations of farmers
         datasets: [{
             label: 'Number of Farmers',
-            data: @json($farmersByLocation->pluck('total')),
+            data: @json($farmersByLocation->pluck('total')), // The total number of farmers in each location
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1
@@ -306,12 +306,14 @@
         locationConfig
     );
 
-    // Crop Type Distribution Chart
-    const cropData = {
-        labels: @json($cropDistribution->pluck('crop_types')),
+    // Crop Type and Livestock Distribution Chart
+    const cropAndLivestockData = {
+        labels: @json($cropAndLivestockDistribution->map(function($item) {
+            return $item->crop_types ? $item->crop_types : $item->livestock_types;
+        })), // Properly handle map to extract either crop_types or livestock_types
         datasets: [{
-            label: 'Number of Farmers',
-            data: @json($cropDistribution->pluck('total')),
+            label: 'Number of Crops and Livestock',
+            data: @json($cropAndLivestockDistribution->pluck('total')), // Ensure this is the total count for each crop type/livestock
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -330,17 +332,33 @@
         }]
     };
 
-    const cropConfig = {
-        type: 'pie',
-        data: cropData,
+    const cropAndLivestockConfig = {
+        type: 'bar', // Bar chart for crop types and livestock
+        data: cropAndLivestockData,
         options: {
             responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Crops and Livestock'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Crop Types and Livestock'
+                    }
+                }
+            }
         }
     };
 
-    const cropChart = new Chart(
-        document.getElementById('cropChart'),
-        cropConfig
+    const cropAndLivestockChart = new Chart(
+        document.getElementById('cropAndLivestockChart'),
+        cropAndLivestockConfig
     );
 </script>
+
 
