@@ -35,7 +35,10 @@ Route::get('admintestimonials', [AdminController::class, 'testimonials'])->name(
 // Route::get('feedback', [HomeController::class, 'feedback'])->name('userfeedback');
 Route::get('farmersCrops', [AdminController::class, 'farmersCrops'])->name('farmersCrops');
 Route::get('viewcrops', [FarmerController::class, 'viewfarmercrops'])->name('viewcrops');
-Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+Route::get('/feedback', [FeedbackController::class, 'index'])
+    ->name('feedback.index')
+    ->middleware('auth');  // Add your middleware here
+
 Route::post('/submit-feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 Route::get('/weather/{cropId}', [WeatherController::class, 'getWeather']);
 Route::get('/viewAllCrops', [AdminController::class, 'ViewAllCrops'])->name('viewAllCrops');

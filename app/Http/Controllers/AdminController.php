@@ -376,7 +376,8 @@ $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, 
         $calamityReport = CalamityReport::all();
         $susceptibleCrops = ['corn', 'wheat', 'rice'];
         $farmers = Farmer::all();
-        $userAccount = User::all();
+        $userAccount = User::where('role', 'user')->get();
+
         $requests = FarmerAyuda::all();
         $announcements = Announcement::all();
         $mostAffectedLocationData = Farmer::select(DB::raw('MONTH(created_at) as month, YEAR(created_at) as year, location, COUNT(*) as total'))
