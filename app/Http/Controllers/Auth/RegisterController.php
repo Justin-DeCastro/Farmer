@@ -54,6 +54,7 @@ public function registers(Request $request)
         // Create the new user
         $user = User::create([
             'name' => $request->name,
+
             'email' => $request->email,
             'rs' => $request->rs, // Store the RSBA number
             'password' => Hash::make($request->password),
