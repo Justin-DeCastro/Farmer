@@ -9,7 +9,53 @@
   data-template="vertical-menu-template-free"
 >
   @include('Components.Admin.header')
+  <style>
+    .table {
+        border: 3px solid #6c7d47; /* Earthy green border */
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(108, 125, 71, 0.3); /* Subtle shadow */
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        animation: borderBlink 3s infinite alternate; /* Animate the border effect */
+    }
 
+    .table th {
+        background-color: #a8b67a; /* Light green header */
+        color: #4d5e26; /* Dark green text */
+        padding: 10px;
+    }
+
+    .table td {
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    .table tr:hover {
+        background-color: #eaf0d5; /* Light green row hover effect */
+    }
+
+    .table img {
+        border: 2px solid #6c7d47; /* Add a border to images */
+        border-radius: 5px;
+    }
+
+    /* Keyframe animation for the rotating blinking border effect */
+    @keyframes borderBlink {
+        0% {
+            border-color: #6c7d47; /* Earthy green border */
+            box-shadow: 0 0 15px #6c7d47; /* Subtle glowing effect */
+        }
+        50% {
+            border-color: #a8b67a; /* Lighter green */
+            box-shadow: 0 0 15px #a8b67a; /* Glowing effect in lighter green */
+        }
+        100% {
+            border-color: #4d5e26; /* Dark green */
+            box-shadow: 0 0 15px #4d5e26; /* Glowing effect in dark green */
+        }
+    }
+</style>
   <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
@@ -66,7 +112,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>User</th> <!-- Updated column name -->
+                            <th>User</th>
                             <th>Email</th>
                             <th>Message</th>
                             <th>Actions</th>
@@ -74,27 +120,23 @@
                     </thead>
                     <tbody>
                         @foreach($feedbacks as $feedback)
-                            <tr>
-                                <!-- Display the user's name instead of the user_id -->
-                                <td>{{ $feedback->user ? $feedback->user->name : 'Unknown' }}</td> <!-- Get user name, fallback to 'Unknown' if no user -->
-                                <td>{{ $feedback->email }}</td>
-                                <td>{{ $feedback->message }}</td>
-                                <td>
-                                    <!-- Update Icon (Triggers Modal) -->
-                                    <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#editModal"
-                                        onclick="populateEditModal({{ $feedback }})">
-                                        <i class="fas fa-edit"></i>
+                        <tr>
+                            <td>{{ $feedback->user ? $feedback->user->name : 'Unknown' }}</td>
+                            <td>{{ $feedback->email }}</td>
+                            <td>{{ $feedback->message }}</td>
+                            <td>
+                                <button class="btn btn-link badge-action" data-bs-toggle="modal" data-bs-target="#editModal" onclick="populateEditModal({{ $feedback }})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form id="delete-form-{{ $feedback->id }}" action="{{ route('feedbacks.destroy', $feedback->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-link badge-action" onclick="confirmDeletion({{ $feedback->id }})">
+                                        <i class="fas fa-trash-alt"></i>
                                     </button>
-                                    <!-- Delete Icon -->
-                                    <form id="delete-form-{{ $feedback->id }}" action="{{ route('feedbacks.destroy', $feedback->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-link" onclick="confirmDeletion({{ $feedback->id }})">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
+                                </form>
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>

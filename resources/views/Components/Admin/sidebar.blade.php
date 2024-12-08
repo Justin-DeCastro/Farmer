@@ -62,7 +62,7 @@
     <li class="menu-item {{ Request::is('userAccount') ? 'active' : '' }}">
         <a href="userAccount" class="menu-link">
             <i class="menu-icon fas fa-hands-helping"></i>
-            <div data-i18n="Without navbar">Users</div>
+            <div data-i18n="Without navbar">Farmers Record</div>
         </a>
     </li>
     <li class="menu-item">

@@ -44,8 +44,13 @@ Route::get('/weather/{cropId}', [WeatherController::class, 'getWeather']);
 Route::get('/viewAllCrops', [AdminController::class, 'ViewAllCrops'])->name('viewAllCrops');
 
 //login register
+// Show the registration form
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
+
+// Handle the form submission
+Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+Route::post('/register', [RegisterController::class, 'registers'])->name('register.submits');
+
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -82,8 +87,8 @@ Route::patch('/calamity-report/{id}/complete', [CalamityReportController::class,
 Route::delete('/calamity-report/{id}/delete', [CalamityReportController::class, 'delete'])->name('calamity-report.delete');
 Route::post('calamity-report/upload-image/{id}', [CalamityReportController::class, 'uploadImage'])->name('calamity-report.upload-image');
 Route::patch('calamity-report/cancel/{id}', [CalamityReportController::class, 'cancel'])->name('calamity-report.cancel');
-
-
+Route::patch('provide-assistance/{id}/{assistanceType}', [CalamityReportController::class, 'provideAssistance'])->name('calamity-report.provide-assistance');
+Route::patch('/calamity-report/{id}/store-assistance/{assistanceType}', [CalamityReportController::class, 'storeAssistanceHistory'])->name('calamity-report.store-assistance');
 
 //user  account
 Route::get('userAccount', [AdminController::class, 'userAccount'])->name('userAccount');

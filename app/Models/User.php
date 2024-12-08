@@ -22,7 +22,21 @@ class User extends Authenticatable
         'email',
         'password',
         'rs',
-        'profile_picture',
+        'last_name',
+        'first_name',
+        'middle_name',
+        'suffix',
+        'farmer_address',
+        'farm_location',
+        'birthdate',
+        'sex',
+        'contact_number',
+        'fourps',
+        'pwd',
+        'indigenous',
+        'farm_area',
+        'area_planted',
+        'commodity',
 
     ];
 

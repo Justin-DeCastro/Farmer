@@ -3,6 +3,53 @@
     data-assets-path="../assets/" data-template="vertical-menu-template-free">
 @include('Components.Admin.header')
 
+<style>
+    .table {
+        border: 3px solid #6c7d47; /* Earthy green border */
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(108, 125, 71, 0.3); /* Subtle shadow */
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        animation: borderBlink 3s infinite alternate; /* Animate the border effect */
+    }
+
+    .table th {
+        background-color: #a8b67a; /* Light green header */
+        color: #4d5e26; /* Dark green text */
+        padding: 10px;
+    }
+
+    .table td {
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    .table tr:hover {
+        background-color: #eaf0d5; /* Light green row hover effect */
+    }
+
+    .table img {
+        border: 2px solid #6c7d47; /* Add a border to images */
+        border-radius: 5px;
+    }
+
+    /* Keyframe animation for the rotating blinking border effect */
+    @keyframes borderBlink {
+        0% {
+            border-color: #6c7d47; /* Earthy green border */
+            box-shadow: 0 0 15px #6c7d47; /* Subtle glowing effect */
+        }
+        50% {
+            border-color: #a8b67a; /* Lighter green */
+            box-shadow: 0 0 15px #a8b67a; /* Glowing effect in lighter green */
+        }
+        100% {
+            border-color: #4d5e26; /* Dark green */
+            box-shadow: 0 0 15px #4d5e26; /* Glowing effect in dark green */
+        }
+    }
+</style>
 
 
 

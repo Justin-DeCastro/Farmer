@@ -82,40 +82,7 @@
             background-color: #365899;
         }
 
-        .profile-picture {
-            width: 150px;  /* Increased size */
-            height: 150px; /* Increased size */
-            border-radius: 50%; /* Keep the container round */
-            background-color: #e9eff1;
-            border: 2px solid #ddd;
-            margin-bottom: 20px;
-            cursor: pointer;
-            display: block;
-            margin: 0 auto;
-            overflow: hidden; /* Ensure the image doesn't overflow */
-        }
 
-        .profile-picture img {
-            width: 100%; /* Ensure the image covers the container */
-            height: 100%; /* Ensure the image covers the container */
-            object-fit: cover; /* Crop the image to maintain aspect ratio */
-            border-radius: 50%; /* Keep the image itself round */
-        }
-
-        .profile-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .profile-info h4 {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        .profile-info p {
-            font-size: 14px;
-            color: #777;
-        }
 
         .error-message {
             color: red;
@@ -140,52 +107,172 @@
                     @csrf
                     @method('PUT')
 
-                    <!-- Profile Picture Preview and File Input Inside the Form -->
-                    <label for="imageInput" class="profile-picture">
-                        <!-- Current profile picture preview -->
-                        <img src="{{ asset(auth()->user()->profile_picture) }}" alt="Profile Picture" class="img-fluid">
-                    </label>
-                    <!-- Hidden file input -->
-                    <input type="file" id="imageInput" name="profile_picture" accept="image/*" onchange="updateImagePreview(this)">
+                    <div class="row">
+                        <!-- Last Name -->
+                        <div class="col-md-4 form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" class="form-control"
+                                value="{{ old('last_name', auth()->user()->last_name) }}" required>
+                            @error('last_name')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" class="form-control"
-                            value="{{ old('name', auth()->user()->name) }}" required>
-                        @error('name')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        <!-- First Name -->
+                        <div class="col-md-4 form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" id="first_name" name="first_name" class="form-control"
+                                value="{{ old('first_name', auth()->user()->first_name) }}" required>
+                            @error('first_name')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Middle Name -->
+                        <div class="col-md-4 form-group">
+                            <label for="middle_name">Middle Name</label>
+                            <input type="text" id="middle_name" name="middle_name" class="form-control"
+                                value="{{ old('middle_name', auth()->user()->middle_name) }}">
+                            @error('middle_name')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" class="form-control"
-                            value="{{ old('email', auth()->user()->email) }}" required>
-                        @error('email')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <!-- Suffix -->
+                        <div class="col-md-4 form-group">
+                            <label for="suffix">Suffix</label>
+                            <input type="text" id="suffix" name="suffix" class="form-control"
+                                value="{{ old('suffix', auth()->user()->suffix) }}">
+                            @error('suffix')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Farmer Address -->
+                        <div class="col-md-4 form-group">
+                            <label for="farmer_address">Farmer Address</label>
+                            <input type="text" id="farmer_address" name="farmer_address" class="form-control"
+                                value="{{ old('farmer_address', auth()->user()->farmer_address) }}" required>
+                            @error('farmer_address')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Farm Location -->
+                        <div class="col-md-4 form-group">
+                            <label for="farm_location">Farm Location</label>
+                            <input type="text" id="farm_location" name="farm_location" class="form-control"
+                                value="{{ old('farm_location', auth()->user()->farm_location) }}" required>
+                            @error('farm_location')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="rs">RS</label>
-                        <input type="text" id="rs" name="rs" class="form-control"
-                            value="{{ old('rs', auth()->user()->rs) }}">
-                        @error('rs')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <!-- Birthdate -->
+                        <div class="col-md-4 form-group">
+                            <label for="birthdate">Birthdate</label>
+                            <input type="date" id="birthdate" name="birthdate" class="form-control"
+                                value="{{ old('birthdate', auth()->user()->birthdate) }}" required>
+                            @error('birthdate')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Sex -->
+                        <div class="col-md-4 form-group">
+                            <label for="sex">Sex</label>
+                            <select id="sex" name="sex" class="form-control" required>
+                                <option value="male" {{ old('sex', auth()->user()->sex) == 'male' ? 'selected' : '' }}>Male</option>
+                                <option value="female" {{ old('sex', auth()->user()->sex) == 'female' ? 'selected' : '' }}>Female</option>
+                            </select>
+                            @error('sex')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Contact Number -->
+                        <div class="col-md-4 form-group">
+                            <label for="contact_number">Contact Number</label>
+                            <input type="text" id="contact_number" name="contact_number" class="form-control"
+                                value="{{ old('contact_number', auth()->user()->contact_number) }}" required>
+                            @error('contact_number')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="password">New Password</label>
-                        <input type="password" id="password" name="password" class="form-control"
-                            placeholder="Leave blank to keep current password">
-                        @error('password')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <!-- 4Ps -->
+                        <div class="col-md-4 form-group">
+                            <label for="fourps">4Ps</label>
+                            <input type="text" id="fourps" name="fourps" class="form-control"
+                                value="{{ old('fourps', auth()->user()->fourps) }}">
+                            @error('fourps')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- PWD -->
+                        <div class="col-md-4 form-group">
+                            <label for="pwd">PWD</label>
+                            <input type="text" id="pwd" name="pwd" class="form-control"
+                                value="{{ old('pwd', auth()->user()->pwd) }}">
+                            @error('pwd')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Indigenous -->
+                        <div class="col-md-4 form-group">
+                            <label for="indigenous">Indigenous</label>
+                            <input type="text" id="indigenous" name="indigenous" class="form-control"
+                                value="{{ old('indigenous', auth()->user()->indigenous) }}">
+                            @error('indigenous')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Farm Area -->
+                        <div class="col-md-4 form-group">
+                            <label for="farm_area">Farm Area</label>
+                            <input type="number" id="farm_area" name="farm_area" class="form-control"
+                                value="{{ old('farm_area', auth()->user()->farm_area) }}" required>
+                            @error('farm_area')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Area Planted -->
+                        <div class="col-md-4 form-group">
+                            <label for="area_planted">Area Planted</label>
+                            <input type="number" id="area_planted" name="area_planted" class="form-control"
+                                value="{{ old('area_planted', auth()->user()->area_planted) }}" required>
+                            @error('area_planted')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Commodity -->
+                        <div class="col-md-4 form-group">
+                            <label for="commodity">Commodity</label>
+                            <input type="text" id="commodity" name="commodity" class="form-control"
+                                value="{{ old('commodity', auth()->user()->commodity) }}" required>
+                            @error('commodity')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-submit">Update Profile</button>
                 </form>
+
+
             </div>
         </div>
     </div>
@@ -215,13 +302,7 @@
         @endif
 
         // Update the profile picture preview when a new file is selected
-        function updateImagePreview(input) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                document.querySelector('.profile-picture img').src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
+
     </script>
 </body>
 </html>

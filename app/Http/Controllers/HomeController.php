@@ -146,46 +146,60 @@ class HomeController extends Controller
         ]);
     }
     public function updateProfile(Request $request)
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    // Validate inputs including the image file
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'password' => 'nullable|string|min:8',
-        'rs' => 'nullable|string|max:255',
-        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation for image file
-    ]);
+        // Validate inputs including the image file
+        $validatedData = $request->validate([
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'suffix' => 'nullable|string|max:255',
+            'farmer_address' => 'required|string|max:255',
+            'farm_location' => 'required|string|max:255',
+            'birthdate' => 'required|date',
+            'sex' => 'required|in:male,female',
+            'contact_number' => 'required|string|max:255',
+            'fourps' => 'nullable|string|max:255',
+            'pwd' => 'nullable|string|max:255',
+            'indigenous' => 'nullable|string|max:255',
+            'farm_area' => 'required|numeric',
+            'area_planted' => 'required|numeric',
+            'commodity' => 'required|string|max:255',
 
-    // Update user fields
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->rs = $request->rs; // Update rs field
+        ]);
 
-    // Check if a new password is provided and hash it
-    if ($request->filled('password')) {
-        $user->password = bcrypt($request->password);
+        // Update user fields
+        $user->last_name = $request->last_name;
+        $user->first_name = $request->first_name;
+        $user->middle_name = $request->middle_name;
+        $user->suffix = $request->suffix;
+        $user->farmer_address = $request->farmer_address;
+        $user->farm_location = $request->farm_location;
+        $user->birthdate = $request->birthdate;
+        $user->sex = $request->sex;
+        $user->contact_number = $request->contact_number;
+        $user->fourps = $request->fourps;
+        $user->pwd = $request->pwd;
+        $user->indigenous = $request->indigenous;
+        $user->farm_area = $request->farm_area;
+        $user->area_planted = $request->area_planted;
+        $user->commodity = $request->commodity;
+
+        // Handle profile picture upload if provided
+
+
+        // Check if a new password is provided and hash it
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+
+        // Save the updated user information
+        $user->save();
+
+        // Redirect back with success message
+        return back()->with('success', 'Profile updated successfully!');
     }
-
-    // Handle profile picture upload if provided
-    if ($request->hasFile('profile_picture')) {
-        // Generate a unique name for the image to avoid overwriting
-        $imageName = time() . '.' . $request->profile_picture->getClientOriginalExtension();
-
-        // Move the image to the public directory
-        $request->profile_picture->move(public_path('profile_pictures'), $imageName);
-
-        // Save the file path to the user's profile picture field
-        $user->profile_picture = 'profile_pictures/' . $imageName; // Save the relative path
-    }
-
-    // Save the updated user information
-    $user->save();
-
-    // Redirect back with success message
-    return back()->with('success', 'Profile updated successfully!');
-}
 
 
 

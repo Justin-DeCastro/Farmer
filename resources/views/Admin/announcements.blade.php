@@ -4,7 +4,24 @@
     data-assets-path="../assets/" data-template="vertical-menu-template-free">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @include('Components.Admin.header')
+<style>
+    /* Add the blinking animation to the edges */
+    @keyframes blink {
+        0% {
+            border-color: #6E7C4D;
+        }
+        50% {
+            border-color: #FF5733; /* Change to your desired blinking color */
+        }
+        100% {
+            border-color: #6E7C4D;
+        }
+    }
 
+    .card {
+        animation: blink 1s infinite; /* Apply the blink animation */
+    }
+</style>
 <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
@@ -61,17 +78,21 @@
                                 Add Announcement
                             </button>
                         </div>
-                        <div class="newsfeed-container" style="display: flex; flex-wrap: wrap; gap: 16px; padding: 16px;">
+                        <div class="newsfeed-container" style="display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; background-color: #F3EFE0;">
                             @foreach ($announcements as $announcement)
-                                <div class="card" style="width: 18rem;">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $announcement->title }}</h5>
-                                        <p class="card-text">{{ $announcement->content }}</p>
-                                        <small class="text-muted">Posted on: {{ $announcement->created_at->format('Y-m-d') }}</small>
+                                <div class="card" style="width: 18rem; background-color: #A8B67A; border: 1px solid #6E7C4D; border-radius: 8px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);">
+                                    <div class="card-body" style="padding: 16px; color: #FFFFFF;">
+                                        <h5 class="card-title" style="font-family: 'Georgia', serif; color: #FDFDFD;">{{ $announcement->title }}</h5>
+                                        <p class="card-text" style="font-family: 'Arial', sans-serif; font-size: 14px; line-height: 1.5;">{{ $announcement->content }}</p>
+                                        <small class="" style="font-style: italic; color: #FFFFFF;">Posted on: {{ $announcement->created_at->format('Y-m-d') }}</small>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
+
+
+
+
                     </div>
 
                 </div>

@@ -109,7 +109,7 @@
             {{ __('Register') }}
         </div>
         <div class="card-body register-body">
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('register.submit') }}">
                 @csrf
 
                 <div class="form-group">
