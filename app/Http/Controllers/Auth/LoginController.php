@@ -18,15 +18,25 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
+        // Attempt login with the provided credentials
         if (Auth::attempt($credentials)) {
             // Get the authenticated user
             $user = Auth::user();
 
-            // Check the role of the user
-            if ($user->role == 'admin') {
-                return redirect()->route('admindash'); // Redirect to admin dashboard
+            // Check if the user's status is 'verified'
+            if ($user->status == 'verified') {
+                // Check the role of the user
+                if ($user->role == 'admin') {
+                    return redirect()->route('admindash'); // Redirect to admin dashboard
+                } else {
+                    return redirect()->route('home'); // Redirect to the home page for regular users
+                }
             } else {
-                return redirect()->route('home'); // Redirect to the home page for regular users
+                // If not verified, log the user out and show an error
+                Auth::logout();
+                return redirect()->back()->withErrors([
+                    'email' => 'Your account is not verified. Please verify your account to log in.',
+                ]);
             }
         }
 

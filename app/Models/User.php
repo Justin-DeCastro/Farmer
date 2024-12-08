@@ -37,6 +37,7 @@ class User extends Authenticatable
         'farm_area',
         'area_planted',
         'commodity',
+        'status',
 
     ];
 

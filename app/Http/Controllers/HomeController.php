@@ -5,6 +5,7 @@ use App\Models\Feedback;
 use App\Models\Farmer;
 use App\Models\CalamityReport;
 use App\Models\Announcement;
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -200,7 +201,22 @@ class HomeController extends Controller
         // Redirect back with success message
         return back()->with('success', 'Profile updated successfully!');
     }
+    public function updateStatus(Request $request, $id)
+    {
+        $userAccount = User::findOrFail($id);
+        $userAccount->status = 'Verified';
+        $userAccount->save();
 
+        return redirect()->back()->with('success', 'Status updated to Verified.');
+    }
+    public function verify($id)
+    {
+        $user = User::findOrFail($id);
+        $user->status = 'Verified';  // Update the status to "Verified"
+        $user->save();
+
+        return redirect()->back()->with('success', 'Status updated to Verified.');
+    }
 
 
 }

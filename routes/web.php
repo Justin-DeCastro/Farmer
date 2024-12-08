@@ -11,6 +11,7 @@ use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\FarmerAyudaController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\CalamityReportController;
+use App\Http\Controllers\AssistanceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -95,6 +96,12 @@ Route::get('userAccount', [AdminController::class, 'userAccount'])->name('userAc
 
 Route::get('editAccount', [HomeController::class, 'editAccount'])->name('editAccount');
 Route::put('/profile/update', [HomeController::class, 'updateProfile'])->name('profile.update');
+Route::patch('/update-status/{id}', [HomeController::class, 'updateStatus'])->name('update.status');
 
+Route::put('profile/verify/{id}', [HomeController::class, 'verify'])->name('profile.verify');
 
 //
+Route::get('/assistances', [AssistanceController::class, 'index'])->name('assistances.index');
+Route::post('/assistances', [AssistanceController::class, 'store'])->name('assistances.store');
+Route::put('/assistances/{id}', [AssistanceController::class, 'update'])->name('assistances.update');
+Route::delete('/assistances/{id}', [AssistanceController::class, 'destroy'])->name('assistances.destroy');

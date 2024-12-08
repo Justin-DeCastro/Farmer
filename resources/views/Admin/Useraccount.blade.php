@@ -132,6 +132,7 @@
                                         <th scope="col">Area Planted</th>
                                         <th scope="col">Commodity</th>
                                         <th scope="col">Created At</th>
+                                        <th scope="col">Account Status </th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -155,131 +156,160 @@
                                             <td>{{ $request->area_planted }}</td>
                                             <td>{{ $request->commodity }}</td>
                                             <td>{{ $request->created_at->format('Y-m-d H:i:s') }}</td>
+                                            <td>{{ $request->status }}</td>
                                             <td>
                                                 <!-- Button to trigger modal -->
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal{{ $request->id }}">
                                                     Update
+                                                </button>
+                                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#verifiedModal{{ $request->id }}">
+                                                    Verify
                                                 </button>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+
                             @foreach ($userAccount as $request)
-                            <!-- Update Modal -->
-                            <div class="modal fade" id="updateModal{{ $request->id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ $request->id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <form action="{{ route('profile.update', $request->id) }}" method="post">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="updateModalLabel{{ $request->id }}">Update Profile</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <!-- Update Modal for each row -->
+                                <div class="modal fade" id="updateModal{{ $request->id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ $request->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form action="{{ route('profile.update', $request->id) }}" method="post">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="updateModalLabel{{ $request->id }}">Update Profile</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- Last Name -->
+                                                    <div class="form-group">
+                                                        <label for="last_name">Last Name</label>
+                                                        <input type="text" id="last_name" name="last_name" class="form-control" value="{{ $request->last_name }}" required>
+                                                    </div>
+
+                                                    <!-- First Name -->
+                                                    <div class="form-group">
+                                                        <label for="first_name">First Name</label>
+                                                        <input type="text" id="first_name" name="first_name" class="form-control" value="{{ $request->first_name }}" required>
+                                                    </div>
+
+                                                    <!-- Middle Name -->
+                                                    <div class="form-group">
+                                                        <label for="middle_name">Middle Name</label>
+                                                        <input type="text" id="middle_name" name="middle_name" class="form-control" value="{{ $request->middle_name }}">
+                                                    </div>
+
+                                                    <!-- Suffix -->
+                                                    <div class="form-group">
+                                                        <label for="suffix">Suffix</label>
+                                                        <input type="text" id="suffix" name="suffix" class="form-control" value="{{ $request->suffix }}">
+                                                    </div>
+
+                                                    <!-- Farmer Address -->
+                                                    <div class="form-group">
+                                                        <label for="farmer_address">Farmer Address</label>
+                                                        <input type="text" id="farmer_address" name="farmer_address" class="form-control" value="{{ $request->farmer_address }}" required>
+                                                    </div>
+
+                                                    <!-- Farm Location -->
+                                                    <div class="form-group">
+                                                        <label for="farm_location">Farm Location</label>
+                                                        <input type="text" id="farm_location" name="farm_location" class="form-control" value="{{ $request->farm_location }}" required>
+                                                    </div>
+
+                                                    <!-- Birthdate -->
+                                                    <div class="form-group">
+                                                        <label for="birthdate">Birthdate</label>
+                                                        <input type="date" id="birthdate" name="birthdate" class="form-control" value="{{ $request->birthdate ? \Carbon\Carbon::parse($request->birthdate)->format('Y-m-d') : '' }}" required>
+                                                    </div>
+
+                                                    <!-- Sex -->
+                                                    <div class="form-group">
+                                                        <label for="sex">Sex</label>
+                                                        <select id="sex" name="sex" class="form-control" required>
+                                                            <option value="male" {{ $request->sex == 'male' ? 'selected' : '' }}>Male</option>
+                                                            <option value="female" {{ $request->sex == 'female' ? 'selected' : '' }}>Female</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Contact Number -->
+                                                    <div class="form-group">
+                                                        <label for="contact_number">Contact Number</label>
+                                                        <input type="text" id="contact_number" name="contact_number" class="form-control" value="{{ $request->contact_number }}" required>
+                                                    </div>
+
+                                                    <!-- 4Ps -->
+                                                    <div class="form-group">
+                                                        <label for="fourps">4Ps</label>
+                                                        <input type="text" id="fourps" name="fourps" class="form-control" value="{{ $request->fourps }}">
+                                                    </div>
+
+                                                    <!-- PWD -->
+                                                    <div class="form-group">
+                                                        <label for="pwd">PWD</label>
+                                                        <input type="text" id="pwd" name="pwd" class="form-control" value="{{ $request->pwd }}">
+                                                    </div>
+
+                                                    <!-- Indigenous -->
+                                                    <div class="form-group">
+                                                        <label for="indigenous">Indigenous</label>
+                                                        <input type="text" id="indigenous" name="indigenous" class="form-control" value="{{ $request->indigenous }}">
+                                                    </div>
+
+                                                    <!-- Farm Area -->
+                                                    <div class="form-group">
+                                                        <label for="farm_area">Farm Area</label>
+                                                        <input type="number" id="farm_area" name="farm_area" class="form-control" value="{{ $request->farm_area }}" required>
+                                                    </div>
+
+                                                    <!-- Area Planted -->
+                                                    <div class="form-group">
+                                                        <label for="area_planted">Area Planted</label>
+                                                        <input type="number" id="area_planted" name="area_planted" class="form-control" value="{{ $request->area_planted }}" required>
+                                                    </div>
+
+                                                    <!-- Commodity -->
+                                                    <div class="form-group">
+                                                        <label for="commodity">Commodity</label>
+                                                        <input type="text" id="commodity" name="commodity" class="form-control" value="{{ $request->commodity }}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                                                </div>
                                             </div>
-                                            <div class="modal-body">
-                                                <!-- Last Name -->
-                                                <div class="form-group">
-                                                    <label for="last_name">Last Name</label>
-                                                    <input type="text" id="last_name" name="last_name" class="form-control" value="{{ $request->last_name }}" required>
-                                                </div>
-
-                                                <!-- First Name -->
-                                                <div class="form-group">
-                                                    <label for="first_name">First Name</label>
-                                                    <input type="text" id="first_name" name="first_name" class="form-control" value="{{ $request->first_name }}" required>
-                                                </div>
-
-                                                <!-- Middle Name -->
-                                                <div class="form-group">
-                                                    <label for="middle_name">Middle Name</label>
-                                                    <input type="text" id="middle_name" name="middle_name" class="form-control" value="{{ $request->middle_name }}">
-                                                </div>
-
-                                                <!-- Suffix -->
-                                                <div class="form-group">
-                                                    <label for="suffix">Suffix</label>
-                                                    <input type="text" id="suffix" name="suffix" class="form-control" value="{{ $request->suffix }}">
-                                                </div>
-
-                                                <!-- Farmer Address -->
-                                                <div class="form-group">
-                                                    <label for="farmer_address">Farmer Address</label>
-                                                    <input type="text" id="farmer_address" name="farmer_address" class="form-control" value="{{ $request->farmer_address }}" required>
-                                                </div>
-
-                                                <!-- Farm Location -->
-                                                <div class="form-group">
-                                                    <label for="farm_location">Farm Location</label>
-                                                    <input type="text" id="farm_location" name="farm_location" class="form-control" value="{{ $request->farm_location }}" required>
-                                                </div>
-
-                                                <!-- Birthdate -->
-                                                <div class="form-group">
-                                                    <label for="birthdate">Birthdate</label>
-                                                    <input type="date" id="birthdate" name="birthdate" class="form-control" value="{{ $request->birthdate ? \Carbon\Carbon::parse($request->birthdate)->format('Y-m-d') : '' }}" required>
-                                                </div>
-
-                                                <!-- Sex -->
-                                                <div class="form-group">
-                                                    <label for="sex">Sex</label>
-                                                    <select id="sex" name="sex" class="form-control" required>
-                                                        <option value="male" {{ $request->sex == 'male' ? 'selected' : '' }}>Male</option>
-                                                        <option value="female" {{ $request->sex == 'female' ? 'selected' : '' }}>Female</option>
-                                                    </select>
-                                                </div>
-
-                                                <!-- Contact Number -->
-                                                <div class="form-group">
-                                                    <label for="contact_number">Contact Number</label>
-                                                    <input type="text" id="contact_number" name="contact_number" class="form-control" value="{{ $request->contact_number }}" required>
-                                                </div>
-
-                                                <!-- 4Ps -->
-                                                <div class="form-group">
-                                                    <label for="fourps">4Ps</label>
-                                                    <input type="text" id="fourps" name="fourps" class="form-control" value="{{ $request->fourps }}">
-                                                </div>
-
-                                                <!-- PWD -->
-                                                <div class="form-group">
-                                                    <label for="pwd">PWD</label>
-                                                    <input type="text" id="pwd" name="pwd" class="form-control" value="{{ $request->pwd }}">
-                                                </div>
-
-                                                <!-- Indigenous -->
-                                                <div class="form-group">
-                                                    <label for="indigenous">Indigenous</label>
-                                                    <input type="text" id="indigenous" name="indigenous" class="form-control" value="{{ $request->indigenous }}">
-                                                </div>
-
-                                                <!-- Farm Area -->
-                                                <div class="form-group">
-                                                    <label for="farm_area">Farm Area</label>
-                                                    <input type="number" id="farm_area" name="farm_area" class="form-control" value="{{ $request->farm_area }}" required>
-                                                </div>
-
-                                                <!-- Area Planted -->
-                                                <div class="form-group">
-                                                    <label for="area_planted">Area Planted</label>
-                                                    <input type="number" id="area_planted" name="area_planted" class="form-control" value="{{ $request->area_planted }}" required>
-                                                </div>
-
-                                                <!-- Commodity -->
-                                                <div class="form-group">
-                                                    <label for="commodity">Commodity</label>
-                                                    <input type="text" id="commodity" name="commodity" class="form-control" value="{{ $request->commodity }}" required>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Update Profile</button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                                <div class="modal fade" id="verifiedModal{{ $request->id }}" tabindex="-1" aria-labelledby="verifiedModalLabel{{ $request->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form action="{{ route('profile.verify', $request->id) }}" method="post">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="verifiedModalLabel{{ $request->id }}">Update Status to Verified</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to update the status to "Verified" for {{ $request->first_name }} {{ $request->last_name }}?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-success">Verify</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
+
+
+
 
 
                         </div>

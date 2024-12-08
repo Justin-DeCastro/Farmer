@@ -99,7 +99,7 @@ class CalamityReportController extends Controller
         $report = CalamityReport::findOrFail($id);
 
         // Remove ownership check, allow anyone to mark as completed
-        $report->update(['status' => 'completed']);
+        $report->update(['report_status' => 'completed']);
 
         return redirect()->back()->with('success', 'Report marked as completed.');
     }

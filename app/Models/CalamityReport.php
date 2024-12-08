@@ -17,7 +17,7 @@ class CalamityReport extends Model
         'no_of_heads', 'surname', 'first_name', 'middle_name', 'extension_name',
         'birthdate', 'region', 'municipality', 'province', 'barangay', 'org_name',
         'male_count', 'female_count', 'sex', 'tribe_name', 'pwd', 'arb', 'four_ps',
-        'user_id','status','assistance_type'
+        'user_id','status','assistance_type','report_status'
     ];
 
     protected $casts = [

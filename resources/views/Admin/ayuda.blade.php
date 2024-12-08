@@ -134,7 +134,20 @@
                         </div>
 
                         <div class="table-responsive text-nowrap">
-                            <table class="table">
+                            <!-- Date Range Filter -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="startDate" class="form-label">Start Date</label>
+                                    <input type="date" id="startDate" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="endDate" class="form-label">End Date</label>
+                                    <input type="date" id="endDate" class="form-control">
+                                </div>
+                            </div>
+
+                            <!-- Table -->
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Farmer Name</th>
@@ -164,129 +177,124 @@
                                         <th>Image</th>
                                         <th>Assistance Type</th>
                                         <th>Assistance History</th>
+                                        <th>Created At</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($calamityReport as $report)
-                                        <tr>
-                                            <td>{{ $report->first_name }} {{ $report->middle_name }}
-                                                {{ $report->surname }} {{ $report->extension_name }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($report->birthdate)->format('F d, Y') }}</td>
-                                            <td>{{ $report->region }}</td>
-                                            <td>{{ $report->province }}</td>
-                                            <td>{{ $report->municipality }}</td>
-                                            <td>{{ $report->barangay }}</td>
-                                            <td>{{ $report->calamity }}</td>
-                                            <td>{{ $report->farmer_type }}</td>
-                                            <td>{{ $report->rsbsa_ref_number }}</td>
-                                            <td>{{ $report->crops_or_livestocks }}</td>
-                                            <td>{{ $report->farm_type }}</td>
-                                            <td>{{ $report->animal_type }}</td>
-                                            <td>{{ $report->age_classification }}</td>
-                                            <td>{{ $report->no_of_heads }}</td>
-                                            <td>
-                                                Partial: {{ $report->partial_damage_area }}<br>
-                                                Total: {{ $report->totally_damage_area }}
-                                            </td>
-                                            <td>{{ $report->total_area }}</td>
-                                            <td>{{ $report->sex }}</td>
-                                            <td>{{ $report->tribe_name }}</td>
-                                            <td>{{ $report->pwd ? 'Yes' : 'No' }}</td>
-                                            <td>{{ $report->arb ? 'Yes' : 'No' }}</td>
-                                            <td>{{ $report->four_ps ? 'Yes' : 'No' }}</td>
-                                            <td>{{ $report->male_count }}</td>
-                                            <td>{{ $report->female_count }}</td>
-                                            <td>
-                                                @if ($report->status == 'Pending')
-                                                    <span
-                                                        class="badge bg-warning text-dark">{{ $report->status }}</span>
-                                                @elseif($report->status == 'Canceled')
-                                                    <span
-                                                        class="badge bg-danger text-white">{{ $report->status }}</span>
-                                                @elseif($report->status == 'Accepted')
-                                                    <span
-                                                        class="badge bg-success text-white">{{ $report->status }}</span>
-                                                @else
-                                                    <span
-                                                        class="badge bg-secondary text-white">{{ $report->status }}</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if (is_array($report->proof_images) && count($report->proof_images) > 0)
-                                                    @foreach ($report->proof_images as $image)
-                                                        <img src="{{ asset($image) }}" alt="Proof Image" width="100"
-                                                            height="100">
+                                        @if ($report->report_status == 'completed') <!-- Filter to show only Completed records -->
+                                            <tr data-created-at="{{ \Carbon\Carbon::parse($report->created_at)->format('Y-m-d') }}">
+                                                <td>{{ $report->first_name }} {{ $report->middle_name }} {{ $report->surname }} {{ $report->extension_name }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($report->birthdate)->format('F d, Y') }}</td>
+                                                <td>{{ $report->region }}</td>
+                                                <td>{{ $report->province }}</td>
+                                                <td>{{ $report->municipality }}</td>
+                                                <td>{{ $report->barangay }}</td>
+                                                <td>{{ $report->calamity }}</td>
+                                                <td>{{ $report->farmer_type }}</td>
+                                                <td>{{ $report->rsbsa_ref_number }}</td>
+                                                <td>{{ $report->crops_or_livestocks }}</td>
+                                                <td>{{ $report->farm_type }}</td>
+                                                <td>{{ $report->animal_type }}</td>
+                                                <td>{{ $report->age_classification }}</td>
+                                                <td>{{ $report->no_of_heads }}</td>
+                                                <td>
+                                                    Partial: {{ $report->partial_damage_area }}<br>
+                                                    Total: {{ $report->totally_damage_area }}
+                                                </td>
+                                                <td>{{ $report->total_area }}</td>
+                                                <td>{{ $report->sex }}</td>
+                                                <td>{{ $report->tribe_name }}</td>
+                                                <td>{{ $report->pwd ? 'Yes' : 'No' }}</td>
+                                                <td>{{ $report->arb ? 'Yes' : 'No' }}</td>
+                                                <td>{{ $report->four_ps ? 'Yes' : 'No' }}</td>
+                                                <td>{{ $report->male_count }}</td>
+                                                <td>{{ $report->female_count }}</td>
+                                                <td>
+                                                    @if ($report->status == 'Pending')
+                                                        <span class="badge bg-warning text-dark">{{ $report->status }}</span>
+                                                    @elseif($report->status == 'Canceled')
+                                                        <span class="badge bg-danger text-white">{{ $report->status }}</span>
+                                                    @elseif($report->status == 'Accepted')
+                                                        <span class="badge bg-success text-white">{{ $report->status }}</span>
+                                                    @else
+                                                        <span class="badge bg-secondary text-white">{{ $report->status }}</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if (is_array($report->proof_images) && count($report->proof_images) > 0)
+                                                        @foreach ($report->proof_images as $image)
+                                                            <img src="{{ asset($image) }}" alt="Proof Image" width="100" height="100">
+                                                        @endforeach
+                                                    @elseif(is_string($report->proof_images) && !empty($report->proof_images))
+                                                        <img src="{{ asset($report->proof_images) }}" alt="Proof Image" width="100" height="100">
+                                                    @else
+                                                        No Image Available
+                                                    @endif
+                                                </td>
+                                                <td>{{ $report->assistance_type }}</td>
+                                                <td>
+                                                    @foreach ($report->assistanceHistories as $history)
+                                                        <span class="badge bg-info">{{ $history->assistance_type }} - {{ \Carbon\Carbon::parse($history->date_provided)->format('F d, Y') }}</span><br>
                                                     @endforeach
-                                                @elseif(is_string($report->proof_images) && !empty($report->proof_images))
-                                                    <img src="{{ asset($report->proof_images) }}" alt="Proof Image"
-                                                        width="100" height="100">
-                                                @else
-                                                    No Image Available
-                                                @endif
-                                            </td>
-                                            <td>{{ $report->assistance_type }}</td>
-                                            <td>
-                                                @foreach ($report->assistanceHistories as $history)
-                                                    <span class="badge bg-info">{{ $history->assistance_type }} -
-                                                        {{ \Carbon\Carbon::parse($history->date_provided)->format('F d, Y') }}</span><br>
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                @if ($report->status !== 'completed' && $report->status !== 'canceled')
-                                                    <form id="completeForm{{ $report->id }}"
-                                                        action="{{ route('calamity-report.complete', $report->id) }}"
-                                                        method="post" style="display: inline;">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="btn btn-sm btn-primary">Mark as
-                                                            Completed</button>
-                                                    </form>
-                                                @endif
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($report->created_at)->format('F d, Y') }}</td>
+                                               <td>
+    <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#assistanceOptions" aria-expanded="false" aria-controls="assistanceOptions">
+        Assistance Options
+    </button>
+    <div class="collapse" id="assistanceOptions">
 
-                                                @if ($report->status !== 'canceled')
-                                                    <form id="cancelForm{{ $report->id }}"
-                                                        action="{{ route('calamity-report.cancel', $report->id) }}"
-                                                        method="post" style="display: inline;">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-warning">Cancel</button>
-                                                    </form>
-                                                @endif
+        <form action="{{ route('calamity-report.store-assistance', ['id' => $report->id, 'assistanceType' => 'Cash Assistance']) }}" method="post" class="d-inline-block">
+            @csrf
+            @method('PATCH')
+            <button type="submit" class="btn btn-sm btn-success">Cash Assistance</button>
+        </form>
+        <form action="{{ route('calamity-report.store-assistance', ['id' => $report->id, 'assistanceType' => 'Seed Assistance']) }}" method="post" class="d-inline-block">
+            @csrf
+            @method('PATCH')
+            <button type="submit" class="btn btn-sm btn-success">Seed Assistance</button>
+        </form>
+        <form action="{{ route('calamity-report.store-assistance', ['id' => $report->id, 'assistanceType' => 'Fertilizer Assistance']) }}" method="post" class="d-inline-block">
+            @csrf
+            @method('PATCH')
+            <button type="submit" class="btn btn-sm btn-success">Fertilizer Assistance</button>
+        </form>
+    </div>
+</td>
 
-                                                <!-- Add Buttons for Assistance -->
-                                                <form id="cashAssistanceForm{{ $report->id }}"
-                                                    action="{{ route('calamity-report.store-assistance', ['id' => $report->id, 'assistanceType' => 'Cash Assistance']) }}"
-                                                    method="post" style="display: inline;">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-sm btn-success">Cash
-                                                        Assistance</button>
-                                                </form>
 
-                                                <form id="seedAssistanceForm{{ $report->id }}"
-                                                    action="{{ route('calamity-report.store-assistance', ['id' => $report->id, 'assistanceType' => 'Seed Assistance']) }}"
-                                                    method="post" style="display: inline;">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-sm btn-success">Seed
-                                                        Assistance</button>
-                                                </form>
 
-                                                <form id="fertilizerAssistanceForm{{ $report->id }}"
-                                                    action="{{ route('calamity-report.store-assistance', ['id' => $report->id, 'assistanceType' => 'Fertilizer Assistance']) }}"
-                                                    method="post" style="display: inline;">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-sm btn-success">Fertilizer
-                                                        Assistance</button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
+
+
+                            <!-- JavaScript to filter rows by date range -->
+                            <script>
+                                document.getElementById('startDate').addEventListener('change', filterByDate);
+                                document.getElementById('endDate').addEventListener('change', filterByDate);
+
+                                function filterByDate() {
+                                    const startDate = document.getElementById('startDate').value;
+                                    const endDate = document.getElementById('endDate').value;
+
+                                    const rows = document.querySelectorAll('table tbody tr');
+                                    rows.forEach(row => {
+                                        const rowDate = row.getAttribute('data-created-at');
+                                        if ((startDate && rowDate < startDate) || (endDate && rowDate > endDate)) {
+                                            row.style.display = 'none';
+                                        } else {
+                                            row.style.display = '';
+                                        }
+                                    });
+                                }
+                            </script>
+
+
 
 
                         </div>
@@ -326,6 +334,12 @@
     @include('Components.Admin.Script')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Include SweetAlert2 CSS & JS -->
+<!-- Include Bootstrap's CSS in the head section -->
+
+<!-- Your existing content -->
+
+<!-- Include Bootstrap's JS and Popper.js just before the closing body tag -->
+
 
 
 
@@ -355,7 +369,9 @@
             var printContents = document.querySelector('.table').outerHTML;
             var originalContents = document.body.innerHTML;
 
-            document.body.innerHTML = '<html><head><title>Report</title><style>body { font-family: Arial, sans-serif; margin: 20px;} .table {border: 1px solid #ddd; border-collapse: collapse; width: 100%;} .table th, .table td {padding: 8px 12px; text-align: left;} .table th {background-color: #f2f2f2;} .table tr:nth-child(even) {background-color: #f9f9f9;} .table tr:hover {background-color: #f1f1f1;}</style></head><body>' + printContents + '</body></html>';
+            document.body.innerHTML =
+                '<html><head><title>Report</title><style>body { font-family: Arial, sans-serif; margin: 20px;} .table {border: 1px solid #ddd; border-collapse: collapse; width: 100%;} .table th, .table td {padding: 8px 12px; text-align: left;} .table th {background-color: #f2f2f2;} .table tr:nth-child(even) {background-color: #f9f9f9;} .table tr:hover {background-color: #f1f1f1;}</style></head><body>' +
+                printContents + '</body></html>';
             window.print();
             document.body.innerHTML = originalContents;
         }

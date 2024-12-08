@@ -233,7 +233,8 @@
                             <!-- RSBSA Reference Number -->
                             <div class="col-md-4 mb-3">
                                 <label for="rsbsaRefNumber">RSBSA Reference Number</label>
-                                <input type="text" id="rsbsaRefNumber" name="rsbsaRefNumber" class="form-control" value="{{ old('rsbsaRefNumber') }}">
+                                <input type="text" id="rsbsaRefNumber" name="rsbsaRefNumber" class="form-control" value="{{ Auth::user()->rs ?? '' }}" readonly>
+
                                 @error('rsbsaRefNumber')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -324,7 +325,7 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="surname">Surname</label>
-                                <input type="text" id="surname" name="surname" class="form-control" value="{{ old('surname') }}">
+                                <input type="text" id="surname" name="surname" class="form-control" value="{{ Auth::user()->last_name ?? '' }}" readonly>
                                 @error('surname')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -332,7 +333,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="first_name">First Name</label>
-                                <input type="text" id="first_name" name="first_name" class="form-control" value="{{ old('first_name') }}">
+                                <input type="text" id="first_name" name="first_name" class="form-control" value="{{ Auth::user()->first_name ?? '' }}" readonly>
                                 @error('first_name')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -340,7 +341,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="middle_name">Middle Name</label>
-                                <input type="text" id="middle_name" name="middle_name" class="form-control" value="{{ old('middle_name') }}">
+                                <input type="text" id="middle_name" name="middle_name" class="form-control" value="{{ Auth::user()->middle_name ?? '' }}" readonly>
                                 @error('middle_name')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -348,7 +349,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="extension_name">Extension Name</label>
-                                <input type="text" id="extension_name" name="extension_name" class="form-control" value="{{ old('extension_name') }}">
+                                <input type="text" id="extension_name" name="extension_name" class="form-control" value="{{ Auth::user()->suffix ?? '' }}">
                                 @error('extension_name')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -356,7 +357,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="birthdate">Birthdate</label>
-                                <input type="date" id="birthdate" name="birthdate" class="form-control" value="{{ old('birthdate') }}">
+                                <input type="date" id="birthdate" name="birthdate" class="form-control" value="{{ Auth::user()->birthdate ?? '' }}">
                                 @error('birthdate')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror

@@ -45,6 +45,12 @@
             <div data-i18n="Without navbar">Farmer Assistance</div>
         </a>
     </li>
+    <li class="menu-item {{ Request::is('assistances') ? 'active' : '' }}">
+        <a href="assistances" class="menu-link">
+            <i class="menu-icon fas fa-hands-helping"></i>
+            <div data-i18n="Without navbar">Calamity Assistance</div>
+        </a>
+    </li>
 
     <!-- Calamity Report -->
     <li class="menu-item {{ Request::is('calamityReportAdmin') ? 'active' : '' }}">

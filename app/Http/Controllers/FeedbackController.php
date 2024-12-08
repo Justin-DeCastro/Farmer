@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 class FeedbackController extends Controller
 {
     public function index(){
-        $feedbacks = Feedback::all();
+        $feedbacks = Feedback::where('user_id', auth()->id())->get();
 
         $apiKey = env('WEATHER_API_KEY');
         $city = 'Oriental Mindoro'; // Replace with your city
