@@ -26,7 +26,9 @@ class RegisterController extends Controller
     try {
         // Create the new user
         $user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'rs' => $request->rs, // Store the RSBA number
             'password' => Hash::make($request->password),
@@ -53,7 +55,9 @@ public function registers(Request $request)
     try {
         // Create the new user
         $user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'rs' => $request->rs, // Store the RSBA number
             'password' => Hash::make($request->password),
@@ -79,7 +83,10 @@ public function registers(Request $request)
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'], // Ensure email is unique
             'rs' => ['required', 'string'], // RSBA number field validation
             'password' => ['required', 'string', 'min:8', 'confirmed'],
