@@ -168,7 +168,7 @@
                                                 class="btn btn-success"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#verifiedModal{{ $request->id }}"
-                                                @if($request->status === 'Verified') disabled @endif>
+                                                @if($request->status === 'verified') disabled @endif>
                                             Verify
                                         </button>
                                             </td>
@@ -374,10 +374,9 @@
                             @enderror
                         </div>
 
-
                         <div class="form-group">
                             <label for="rs">RSBA No.</label>
-                            <input id="rs" type="text" class="form-control @error('rs') is-invalid @enderror" name="rs" value="{{ old('rs') }}" required>
+                            <input id="rs" type="text" class="form-control @error('rs') is-invalid @enderror" name="rs" value="{{ old('rs') }}" required oninput="formatRSBA(this)">
                             @error('rs')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -455,7 +454,35 @@
         @endif
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function formatRSBA(input) {
+            let value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+            let formattedValue = '';
 
+            // Format groups: 2-2-2-3-6 (17-52-02-011-000069)
+            const pattern = [2, 2, 2, 3, 6];
+            let index = 0;
+            let charCount = 0;
+
+            // Loop over the value and apply the pattern
+            for (let i = 0; i < value.length; i++) {
+                formattedValue += value[i];
+                charCount++;
+
+                // Check if a dash should be inserted after the specified group length
+                if (charCount === pattern[index]) {
+                    // Only add dash if it's not the last group
+                    if (index < pattern.length - 1) {
+                        formattedValue += '-';
+                    }
+                    index++;
+                    charCount = 0; // Reset character counter for the next segment
+                }
+            }
+
+            input.value = formattedValue;
+        }
+    </script>
 </body>
 
 </html>
