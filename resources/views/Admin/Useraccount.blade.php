@@ -168,7 +168,7 @@
                                                 class="btn btn-success"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#verifiedModal{{ $request->id }}"
-                                                @if($request->status === 'verified') disabled @endif>
+                                                @if($request->status === 'Verified') disabled @endif>
                                             Verify
                                         </button>
                                             </td>
