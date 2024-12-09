@@ -116,6 +116,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">ID</th>
+                                        <th scope="col">RSBSA</th>
                                         <th scope="col">Last Name</th>
                                         <th scope="col">First Name</th>
                                         <th scope="col">Middle Name</th>
@@ -140,6 +141,7 @@
                                     @foreach ($userAccount as $request)
                                         <tr>
                                             <td>{{ $request->id }}</td>
+                                            <td>{{ $request->rsbsa }}</td>
                                             <td>{{ $request->last_name }}</td>
                                             <td>{{ $request->first_name }}</td>
                                             <td>{{ $request->middle_name }}</td>
@@ -162,9 +164,13 @@
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal{{ $request->id }}">
                                                     Update
                                                 </button>
-                                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#verifiedModal{{ $request->id }}">
-                                                    Verify
-                                                </button>
+                                                <button type="button"
+                                                class="btn btn-success"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#verifiedModal{{ $request->id }}"
+                                                @if($request->status === 'verified') disabled @endif>
+                                            Verify
+                                        </button>
                                             </td>
                                         </tr>
                                     @endforeach

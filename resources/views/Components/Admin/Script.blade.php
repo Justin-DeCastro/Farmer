@@ -12,179 +12,118 @@
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var viewAllCropsModal = document.getElementById('viewAllCropsModal');
+    document.addEventListener('DOMContentLoaded', function () {
+        // View All Crops Modal Map
+        var viewAllCropsModal = document.getElementById('viewAllCropsModal');
 
-            viewAllCropsModal.addEventListener('show.bs.modal', function() {
-                var allCropsMapElement = document.getElementById('allCropsMap');
-                var allCropsMap = new google.maps.Map(allCropsMapElement, {
-                    zoom: 5,
-                    center: {
-                        lat: 13.41,
-                        lng: 122.56
-                    } // Centered on the Philippines
-                });
+        viewAllCropsModal.addEventListener('show.bs.modal', function () {
+            var allCropsMapElement = document.getElementById('allCropsMap');
 
-                // Use the farmers data to set markers on the map
-                var farmers = @json($farmers); // Pass the $farmers data to your view
-
-                farmers.forEach(function(farmer) {
-                    if (farmer.location) {
-                        var geocoder = new google.maps.Geocoder();
-                        geocoder.geocode({
-                            'address': farmer.location
-                        }, function(results, status) {
-                            if (status === 'OK') {
-                                new google.maps.Marker({
-                                    map: allCropsMap,
-                                    position: results[0].geometry.location,
-                                    icon: {
-                                        url: 'images/images-removebg-preview.png', // Path to your custom marker image
-                                        scaledSize: new google.maps.Size(30,
-                                            30) // Adjust size as needed
-                                    }
-                                });
-                                allCropsMap.setCenter(results[0].geometry
-                                .location); // Center the map based on the last marker
-                            } else {
-                                console.error(
-                                    'Geocode was not successful for the following reason: ' +
-                                    status);
-                            }
-                        });
-                    }
-                });
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var mapModal = document.getElementById('mapModal');
-
-            mapModal.addEventListener('show.bs.modal', function(event) {
-                var button = event.relatedTarget;
-                var location = button.getAttribute('data-location');
-                var mapElement = document.getElementById('modalMap');
-
-                // Initialize the map
-                var map = new google.maps.Map(mapElement, {
-                    zoom: 15
-                });
-
-                var geocoder = new google.maps.Geocoder();
-                geocoder.geocode({
-                    'address': location
-                }, function(results, status) {
-                    if (status === 'OK') {
-                        map.setCenter(results[0].geometry.location);
-                        var marker = new google.maps.Marker({
-                            map: map,
-                            position: results[0].geometry.location,
-                            icon: {
-                                url: 'images/images-removebg-preview.png', // Custom icon
-                                scaledSize: new google.maps.Size(40,
-                                    40) // Adjust the size here
-                            }
-                        });
-
-                        // Create a click event for the marker
-                        marker.addListener('click', function() {
-                            // Fetch and display weather data when marker is clicked
-                            var fullLocation = results[0]
-                                .formatted_address; // Get the full location address
-                            fetchWeatherData(results[0].geometry.location.lat(), results[0]
-                                .geometry.location.lng(), fullLocation);
-                        });
-                    } else {
-                        alert('Geocode was not successful for the following reason: ' + status);
-                    }
-                });
+            // Initialize the map centered on Bansud, Oriental Mindoro
+            var allCropsMap = new google.maps.Map(allCropsMapElement, {
+                zoom: 12,
+                center: {
+                    lat: 12.8627, // Latitude for Bansud
+                    lng: 121.4595 // Longitude for Bansud
+                }
             });
 
-            mapModal.addEventListener('hidden.bs.modal', function() {
-                var mapElement = document.getElementById('modalMap');
-                mapElement.innerHTML = ''; // Clear map when modal is hidden
-                document.getElementById('weatherInfo').style.display =
-                    'none'; // Hide weather info when modal is hidden
-                document.getElementById('weatherInfo').innerHTML = ''; // Clear previous weather info
-            });
+            // Use the farmers data to add markers
+            var farmers = @json($farmers); // Pass the farmers data from backend
 
-            function fetchWeatherData(lat, lon, location) {
-                var apiKey = '4e89cb6596765628fd6138f58d7454e1'; // Your Weather API key
-                var url =
-                    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`; // Metric units for temperature
-
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.main) {
-                            // Display the weather information in the modal
-                            var weatherInfo = `
-                                <h5>Weather in ${location}</h5>
-                                <p>Temperature: ${data.main.temp} °C</p>
-                                <p>Condition: ${data.weather[0].description}</p>
-                            `;
-                            document.getElementById('weatherInfo').innerHTML =
-                                weatherInfo; // Insert weather info
-                            document.getElementById('weatherInfo').style.display = 'block'; // Show weather info
+            farmers.forEach(function (farmer) {
+                if (farmer.location) {
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ address: farmer.location }, function (results, status) {
+                        if (status === 'OK') {
+                            new google.maps.Marker({
+                                map: allCropsMap,
+                                position: results[0].geometry.location,
+                                icon: {
+                                    url: 'images/images-removebg-preview.png', // Path to custom marker
+                                    scaledSize: new google.maps.Size(30, 30) // Adjust size as needed
+                                }
+                            });
                         } else {
-                            alert('Weather data not available');
+                            console.error('Geocode was not successful for the following reason: ' + status);
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching weather data:', error);
                     });
-            }
-        });
-    </script>
-
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var viewAllDataModal = document.getElementById('viewAllDataModal'); // Updated variable name
-
-            viewAllDataModal.addEventListener('show.bs.modal', function() {
-                var mapElement = document.getElementById('modalMap');
-                var map = new google.maps.Map(mapElement, {
-                    zoom: 5,
-                    center: {
-                        lat: -34.397,
-                        lng: 150.644
-                    } // Default center
-                });
-
-                // Replace with your actual farmers data
-                var farmers =
-                @json($farmers); // Ensure you pass the $farmers data to your view
-
-                farmers.forEach(function(farmer) {
-                    if (farmer.location) {
-                        var geocoder = new google.maps.Geocoder();
-                        geocoder.geocode({
-                            'address': farmer.location
-                        }, function(results, status) {
-                            if (status === 'OK') {
-                                var marker = new google.maps.Marker({
-                                    map: map,
-                                    position: results[0].geometry.location,
-                                    icon: {
-                                        url: 'images/images-removebg-preview.png', // Path to your custom marker image
-                                        scaledSize: new google.maps.Size(30,
-                                            30) // Adjust size as needed
-                                    }
-                                });
-                                map.setCenter(results[0].geometry.location);
-                            } else {
-                                console.error(
-                                    'Geocode was not successful for the following reason: ' +
-                                    status);
-                            }
-                        });
-                    }
-                });
+                }
             });
         });
-    </script>
+
+        // Individual Farmer's Location Modal Map
+        var mapModal = document.getElementById('mapModal');
+
+        mapModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var location = button.getAttribute('data-location');
+            var mapElement = document.getElementById('modalMap');
+
+            // Initialize the map centered on Bansud
+            var map = new google.maps.Map(mapElement, {
+                zoom: 12,
+                center: {
+                    lat: 12.8627, // Latitude for Bansud
+                    lng: 121.4595 // Longitude for Bansud
+                }
+            });
+
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: location }, function (results, status) {
+                if (status === 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        icon: {
+                            url: 'images/images-removebg-preview.png', // Custom icon
+                            scaledSize: new google.maps.Size(40, 40) // Adjust the size
+                        }
+                    });
+
+                    // Fetch and display weather data
+                    fetchWeatherData(results[0].geometry.location.lat(), results[0].geometry.location.lng(), results[0].formatted_address);
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        });
+
+        mapModal.addEventListener('hidden.bs.modal', function () {
+            var mapElement = document.getElementById('modalMap');
+            mapElement.innerHTML = ''; // Clear map
+            document.getElementById('weatherInfo').style.display = 'none'; // Hide weather info
+            document.getElementById('weatherInfo').innerHTML = ''; // Clear weather info
+        });
+
+        function fetchWeatherData(lat, lon, location) {
+            var apiKey = '4e89cb6596765628fd6138f58d7454e1'; // Your Weather API key
+            var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.main) {
+                        // Display the weather information
+                        var weatherInfo = `
+                            <h5>Weather in ${location}</h5>
+                            <p>Temperature: ${data.main.temp} °C</p>
+                            <p>Condition: ${data.weather[0].description}</p>
+                        `;
+                        document.getElementById('weatherInfo').innerHTML = weatherInfo;
+                        document.getElementById('weatherInfo').style.display = 'block';
+                    } else {
+                        alert('Weather data not available');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                });
+        }
+    });
+</script>
+
 <!-- DataTables CSS -->
 <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
 <!-- DataTables Buttons CSS -->
