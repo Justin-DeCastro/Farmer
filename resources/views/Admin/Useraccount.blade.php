@@ -141,7 +141,7 @@
                                     @foreach ($userAccount as $request)
                                         <tr>
                                             <td>{{ $request->id }}</td>
-                                            <td>{{ $request->rsbsa }}</td>
+                                            <td>{{ $request->rs }}</td>
                                             <td>{{ $request->last_name }}</td>
                                             <td>{{ $request->first_name }}</td>
                                             <td>{{ $request->middle_name }}</td>
