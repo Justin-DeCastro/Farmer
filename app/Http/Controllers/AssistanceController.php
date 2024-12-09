@@ -15,7 +15,7 @@ class AssistanceController extends Controller
 
         $users = User::all();
 
-        return view('admin.calamityAssistance', compact('assistances', 'users'));
+        return view('Admin.calamityAssistance', compact('assistances', 'users'));
     }
 
     public function store(Request $request)
@@ -50,7 +50,7 @@ class AssistanceController extends Controller
 
         $assistance->update($validatedData);
 
-        return redirect()->route('assistances.index')->with('success', 'Assistance updated successfully!');
+        return redirect()->back()->with('success', 'Assistance updated successfully!');
     }
 
     public function destroy($id)
@@ -58,6 +58,6 @@ class AssistanceController extends Controller
         $assistance = Assistance::findOrFail($id);
         $assistance->delete();
 
-        return redirect()->route('assistances.index')->with('success', 'Assistance deleted successfully!');
+        return redirect()->back()->with('success', 'Assistance deleted successfully!');
     }
 }
