@@ -28,9 +28,7 @@ use App\Http\Controllers\AssistanceController;
 // });
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('home', [HomeController::class, 'home'])->name('home');
-Route::get('admindash', [AdminController::class, 'admindash'])
-    ->name('admindash')
-    ->middleware('auth'); // Ensure the user is authenticated
+
 
 Route::get('admintestimonials', [AdminController::class, 'testimonials'])->name('admintestimonials');
 // Route::get('feedback', [HomeController::class, 'feedback'])->name('userfeedback');
