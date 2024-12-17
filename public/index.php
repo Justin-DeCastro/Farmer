@@ -37,7 +37,7 @@
     <div class="error-container">
         <div class="error-code">404</div>
         <div class="error-message">Oops! The page you are looking for does not exist.</div>
-        
+        <a href="/" class="btn btn-primary home-btn">Go Back to Home</a>
     </div>
 
     <!-- Bootstrap JS -->
