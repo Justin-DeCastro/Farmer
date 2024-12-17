@@ -25,10 +25,7 @@ class AdminController extends Controller
         $farmers = Farmer::all();
 
         // Location most sent ayuda
-        $locationMostSentAyuda = FarmerAyuda::select('location', DB::raw('count(*) as total'))
-            ->groupBy('location')
-            ->orderByDesc('total')
-            ->first();
+        
 
         // Unique crop types count
         $uniqueCropTypesCount = Farmer::distinct('crop_types')->count('crop_types');
